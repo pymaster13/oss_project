@@ -1,0 +1,66 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if error %}
+<div class="alert-reg">
+<div class="alert alert-danger" role="alert">
+  {{error}}
+</div>
+</div>
+{% endif %}
+
+{% if success %}
+<div class="alert-reg">
+<div class="alert alert-success" role="alert">
+ {{success}}
+</div>
+</div>
+{% endif %}
+
+<form enctype="multipart/form-data" class="" action="" method="post">
+  {%csrf_token%}
+
+<div class="" style="margin-left:20%;display:flex;justify:content:center;align-items:center;">
+<div class="" style="margin-top:30px;">
+<div class="border" style="margin:0 auto;width:800px;">
+<center>
+<select id="select_object" name="select_object" class="form-control">
+  {% if not selected %}
+  <option>Выберите объект</option>
+  {% else %}
+  <option>{{context.object.name_object}}</option>
+  {% endif %}
+{% for object in context.objects %}
+ {% if object.name_object != context.object.name_object %}
+ <option value="{{object.name_object}}"">{{object.name_object}}</option>
+ {% endif %}
+{% endfor %}
+</select>
+</div>
+
+<div class="border" style="margin-top:20px;width:800px;">
+<center>
+<select id="select_field_form" name="select_field" class="form-control" onchange="select_document(this)">
+  <option>Выберите тип документа</option>
+  <option>ИТД</option>
+  <option>КС2 КС3 смета</option>
+  <option>КС11 КС14</option>
+</select>
+
+  <div id="document_div" style="display:none;margin-top:20px;">
+    <label for="document">Выберите документ c актом для КС2 (.xls, .xlsx)</label>
+    <input class="btn btn-primary" style="background-color: #94b8d6;color:rgba(0,0,0,.5)" type="file" id="document" name="document" accept=".xlsx, .xls">
+    <label for="document">Выберите документ c ЛСР для сметы (.xls, .xlsx)</label>
+    <input class="btn btn-primary" style="background-color: #94b8d6;color:rgba(0,0,0,.5)" type="file" id="document_smeta" name="document_smeta" accept=".xlsx, .xls">
+  </div>
+
+</div>
+</div>
+
+<div class="" style="display:block;justify-content:center;aligh-items:center;width:600px;">
+<button class="btn btn-primary" style="background: #94b8d6;color:rgba(0,0,0,.5);margin-top:10%;margin-left:20%" type="submit">Сформировать</button>
+</div>
+
+</div>
+</form>
+{% endblock %}

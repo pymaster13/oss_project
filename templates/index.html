@@ -1,0 +1,1216 @@
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css">
+
+  <title>
+       ООО "ОСС"
+  </title>
+</head>
+
+<body >
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #94b8d6;">
+  <a class="navbar-brand" href="{% url 'index' %}">ООО "ОСС"</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'object_add' %}"><b>Добавить объект</b></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'object_smeta' %}"><b>Добавить информацию для сметной документации</b></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'form_document' %}"><b>Сформировать документ</b></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'object_select_view' %}"><b>Информация об объектах</b></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% block content %}
+
+{% endblock %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js.map"></script>
+
+<script async type="text/javascript" async>
+$(document).ready(function()
+{
+  $('#select_GIP').multiselect({
+    nonSelectedText:"Выберите ГИПа",
+    enableFiltering: true,
+    maxHeight: 200,
+    enableCaseInsensitiveFiltering : true,
+    filterPlaceholder : "Поиск...",
+    templates: {
+      ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:350px;"></ul>',
+      filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+    },
+  });
+});
+</script>
+
+<script async type="text/javascript" async>
+$(document).ready(function()
+{
+  $('#select_object').multiselect({
+    nonSelectedText:"Выберите объект",
+    enableFiltering: true,
+    maxHeight: 200,
+    enableCaseInsensitiveFiltering : true,
+    filterPlaceholder : "Поиск...",
+    templates: {
+      ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:800px;"></ul>',
+      filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+    },
+  });
+});
+</script>
+
+
+<script async type="text/javascript" async>
+$(document).ready(function()
+{
+  $('#select_field').multiselect({
+    nonSelectedText:"Выберите интересующие данные",
+    includeSelectAllOption: true,
+    selectAllText: 'Выбрать все данные',
+    enableFiltering: true,
+    maxHeight: 400,
+    enableCaseInsensitiveFiltering : true,
+    filterPlaceholder : "Поиск...",
+    templates: {
+      ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:600px;"></ul>',
+      filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+    },
+  });
+});
+</script>
+
+<script async type="text/javascript" async>
+$(document).ready(function()
+{
+  $('#select_raion').multiselect({
+    nonSelectedText:"Выберите район",
+    enableFiltering: true,
+    maxHeight: 200,
+    enableCaseInsensitiveFiltering : true,
+    filterPlaceholder : "Поиск...",
+    templates: {
+      ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:350px;"></ul>',
+      filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+    },
+  });
+});
+</script>
+
+<script async type="text/javascript" async>
+$(document).ready(function()
+{
+  $('#select_kontragent').multiselect({
+    nonSelectedText:"Выберите контрагента",
+    enableFiltering: true,
+    maxHeight: 200,
+    enableCaseInsensitiveFiltering : true,
+    filterPlaceholder : "Поиск...",
+    templates: {
+      ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:350px;"></ul>',
+      filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+    },
+  });
+});
+</script>
+
+<script type="text/javascript" async>
+function prodavlivanie(checkb){
+  if (checkb.checked){
+    var new_div = document.createElement('div');
+    new_div.style = "display:flex;justify-content:center;margin-top:20px;padding-right:10px;padding-left:10px;"
+    new_div.id = "prodavlivanie_subdiv";
+
+    new_div2 = document.createElement('div');
+    new_div2.id = 'prodavlivanie_subdiv2';
+    new_div2.style = 'margin-top:10px';
+    new_div2.innerHTML = '<hr><center><b><span>Дополнительные данные для актов ИТД, связанных с пунктом "Продавливание"</span></b>';
+
+    var span1 = document.createElement('span');
+    span1.innerText  = 'Труба';
+    span1.style = 'margin-top:8px'
+    new_div.appendChild(span1);
+
+    var span2 = document.createElement('span');
+    span2.innerText  = '⌀';
+    span2.style = 'margin: 8px 10px 0 10px';
+    new_div.appendChild(span2);
+
+    var input1 = document.createElement('input');
+    input1.type = 'text';
+    input1.name = 'prodav_diametr'
+    input1.style = "width:100px;margin:0 10px 0 15px;";
+    input1.className  = "form-control";
+    new_div.appendChild(input1);
+
+    var span3 = document.createElement('span');
+    span3.innerText  = 'x';
+    span3.style = 'margin: 8px 10px 0 10px';
+    new_div.appendChild(span3);
+
+    var input2 = document.createElement('input');
+    input2.type = 'text';
+    input2.name = 'prodav_x'
+    input2.style = "width:100px;margin:0 10px 0 15px;";
+    input2.className  = "form-control";
+    new_div.appendChild(input2);
+
+    var input3 = document.createElement('input');
+    input3.type = 'text';
+    input3.name = 'prodav_dlina'
+    input3.style = "width:130px;margin:0 20px 0 15px;";
+    input3.className  = "form-control";
+    new_div.appendChild(input3);
+
+    var span4 = document.createElement('span');
+    span4.innerText  = 'м';
+    span4.style = 'margin: 10px 10px 0 10px';
+    new_div.appendChild(span4);
+
+    new_div3 = document.createElement('div');
+    new_div3.id = 'prodavlivanie_subdiv3';
+    new_div3.style = 'display:flex;margin-top:25px;justify-content:center;';
+
+    var span6 = document.createElement('span');
+    span6.innerText = 'от';
+    new_div3.appendChild(span6);
+
+    var span8 = document.createElement('span');
+    span8.style = 'margin-left:20px';
+    span8.innerText = 'ПК0 +';
+    new_div3.appendChild(span8);
+
+    var input5 = document.createElement('input');
+    input5.type = 'text';
+    input5.name = 'pk0_1_diam'
+    input5.style = "width:80px;height:30px;margin:0 10px 0 15px;";
+    input5.className  = "form-control";
+    new_div3.appendChild(input5);
+
+    var span7 = document.createElement('span');
+    span7.style = 'margin-left:20px';
+    span7.innerText = 'до';
+    new_div3.appendChild(span7);
+
+    var span9 = document.createElement('span');
+    span9.style = 'margin-left:25px';
+    span9.innerText = 'ПК0 +';
+    new_div3.appendChild(span9);
+
+    var input6 = document.createElement('input');
+    input6.type = 'text';
+    input6.name = 'pk0_2_diam'
+    input6.style = "width:80px;height:30px;margin:0 10px 0 15px;";
+    input6.className  = "form-control";
+    new_div3.appendChild(input6);
+
+    document.getElementById("prodavlivanie_div").appendChild(new_div2);
+    document.getElementById("prodavlivanie_div").appendChild(new_div);
+    document.getElementById("prodavlivanie_div").appendChild(new_div3);
+  }
+  else{
+    subdiv = document.getElementById("prodavlivanie_subdiv");
+    subdiv2 = document.getElementById("prodavlivanie_subdiv2");
+    subdiv3 = document.getElementById("prodavlivanie_subdiv3");
+    document.getElementById("prodavlivanie_div").removeChild(subdiv);
+    document.getElementById("prodavlivanie_div").removeChild(subdiv2);
+    document.getElementById("prodavlivanie_div").removeChild(subdiv3);
+  }
+  }
+</script>
+
+<script type="text/javascript" async>
+function rostehnadzor(checkb){
+  if (checkb.checked){
+    var new_div = document.createElement('div');
+    new_div.style = "display:flex;justify-content:center;margin-top:20px;padding-right:10px;padding-left:10px;"
+    new_div.id = "rostehnadzor_subdiv";
+
+    new_div2 = document.createElement('div');
+    new_div2.id = 'rostehnadzor_subdiv2';
+    new_div2.style = 'margin-top:10px';
+    new_div2.innerHTML = '<hr><center><b><span>Дополнительные данные для актов ИТД, связанных с пунктом "Ростехнадзор"</span></b>';
+
+    var span1 = document.createElement('span');
+    span1.innerText  = 'ПК';
+    new_div.appendChild(span1);
+
+    var input1 = document.createElement('input');
+    input1.type = 'text';
+    input1.name = 'pk1'
+    input1.style = "width:50px;height:30px;margin:0 10px 0 15px;";
+    input1.className  = "form-control";
+    new_div.appendChild(input1);
+
+    var span2 = document.createElement('span');
+    span2.innerText  = '+';
+    new_div.appendChild(span2);
+
+    var input2 = document.createElement('input');
+    input2.type = 'text';
+    input2.name = 'pk1_diam'
+    input2.style = "width:80px;height:30px;margin:0 10px 0 15px;";
+    input2.className  = "form-control";
+    new_div.appendChild(input2);
+
+    var span3 = document.createElement('span');
+    span3.innerText  = '-';
+    span3.style = "margin-left:15px"
+    new_div.appendChild(span3);
+
+    var span4 = document.createElement('span');
+    span4.innerText  = 'ПК';
+    span4.style = "margin-left:20px"
+    new_div.appendChild(span4);
+
+    var input3 = document.createElement('input');
+    input3.type = 'text';
+    input3.name = 'pk2'
+    input3.style = "width:50px;height:30px;margin:0 10px 0 15px;";
+    input3.className  = "form-control";
+    new_div.appendChild(input3);
+
+    var span5 = document.createElement('span');
+    span5.innerText = '+';
+    new_div.appendChild(span5);
+
+    var input4 = document.createElement('input');
+    input4.type = 'text';
+    input4.name = 'pk2_diam'
+    input4.style = "width:80px;height:30px;margin:0 10px 0 15px;";
+    input4.className  = "form-control";
+    new_div.appendChild(input4);
+
+    new_div3 = document.createElement('div');
+    new_div3.id = 'rostehnadzor_subdiv3';
+    new_div3.style = 'display:flex;justify-content:center;margin-top:20px';
+
+    var span6 = document.createElement('span');
+    span6.innerText  = 'Труба';
+    span6.style = 'margin-top:8px;'
+    new_div3.appendChild(span6);
+
+    var span7 = document.createElement('span');
+    span7.innerText  = '⌀';
+    span7.style = 'margin: 8px 10px 0 10px';
+    new_div3.appendChild(span7);
+
+    var input5 = document.createElement('input');
+    input5.type = 'text';
+    input5.name = 'rosteh_diametr'
+    input5.style = "width:100px;margin:0 10px 0 15px;";
+    input5.className  = "form-control";
+    new_div3.appendChild(input5);
+
+    var span8 = document.createElement('span');
+    span8.innerText  = 'x';
+    span8.style = 'margin: 8px 10px 0 10px';
+    new_div3.appendChild(span8);
+
+    var input6 = document.createElement('input');
+    input6.type = 'text';
+    input6.name = 'rosteh_x'
+    input6.style = "width:100px;margin:0 10px 0 15px;";
+    input6.className  = "form-control";
+    new_div3.appendChild(input6);
+
+    document.getElementById("rostehnadzor_div").appendChild(new_div2);
+    document.getElementById("rostehnadzor_div").appendChild(new_div3);
+    document.getElementById("rostehnadzor_div").appendChild(new_div);
+  }
+  else{
+    subdiv = document.getElementById("rostehnadzor_subdiv");
+    subdiv2 = document.getElementById("rostehnadzor_subdiv2");
+    subdiv3 = document.getElementById("rostehnadzor_subdiv3");
+    document.getElementById("rostehnadzor_div").removeChild(subdiv);
+    document.getElementById("rostehnadzor_div").removeChild(subdiv2);
+    document.getElementById("rostehnadzor_div").removeChild(subdiv3);
+  }
+  }
+</script>
+
+
+<script type="text/javascript" async>
+function change_GIP(sel){
+  var val = sel.options[sel.selectedIndex].value;
+  orgs = {{ context.gips_orgs|safe}};
+  if (val != "Выберите ГИПа"){
+    document.getElementById('organization').value = orgs[val];
+    document.getElementById("ks11_predstav_proekt_fio").value = val
+    document.getElementById("ks11_predstav_proekt_post").value = "Главный инженер проекта " + orgs[val]
+  }
+
+  else{
+    document.getElementById('organization').value = "";
+  }
+
+  input = document.getElementById("custom_GIP");
+  if (val == "Выберите ГИПа"){
+  input.disabled = false;
+  }
+  else{
+  input.disabled = true;
+  input.value = "";
+  }
+
+}
+</script>
+
+<script async type="text/javascript" async>
+$(document).ready(function()
+{
+  $('#select_davlenie').multiselect({
+    nonSelectedText:"Выберите давление",
+    templates: {
+      ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:350px;"></ul>',
+      filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+    },
+  });
+});
+</script>
+
+<script type="text/javascript" async>
+function select_document(sel){
+  var val = sel.options[sel.selectedIndex].value;
+  if (val == "ИТД"){
+    div = document.getElementById('document_div');
+    div.style.display = 'none'
+  }
+  if (val == "КС2 КС3 смета"){
+    div = document.getElementById('document_div');
+    div.style.display = 'block'
+  }
+  if (val == "КС11 КС14"){
+    div = document.getElementById('document_div');
+    div.style.display = 'none'
+  }
+}
+</script>
+
+<script type="text/javascript" async>
+function change_davlenie(sel){
+  var val = sel.options[sel.selectedIndex].value;
+  input1 = document.getElementById("select_davlenie_custom");
+  input2 = document.getElementById("davlenie_name");
+
+  if (val == "0.3"){
+    document.getElementById('gazoprov').innerHTML = "Подземный стальной газопровод низкого давления";
+    document.getElementById('poliet_gazoprov').innerHTML = "Подземный полиэтиленовый газопровод низкого давления";
+    document.getElementById('nadzem_gazoprov').innerHTML = "Надземный стальной газопровод низкого давления";
+    input1.value = ""
+    input1.disabled = true;
+    input2.value = ""
+    input2.disabled = true;
+  }
+  else if (val == "0.6"){
+    document.getElementById('gazoprov').innerHTML = "Подземный стальной газопровод среднего давления";
+    document.getElementById('poliet_gazoprov').innerHTML = "Подземный полиэтиленовый газопровод среднего давления";
+    document.getElementById('nadzem_gazoprov').innerHTML = "Надземный стальной газопровод низкого давления";
+    input1.value = ""
+    input1.disabled = true;
+    input2.value = ""
+    input2.disabled = true;
+  }
+  else{
+    document.getElementById('gazoprov').innerHTML = "Подземный стальной газопровод";
+    document.getElementById('poliet_gazoprov').innerHTML = "Подземный полиэтиленовый газопровод";
+    document.getElementById('nadzem_gazoprov').innerHTML = "Надземный стальной газопровод";
+    input1.disabled = false;
+    input2.disabled = false;
+  }
+
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count = 2;
+function createNewTruba() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "poliet_truba" + '-' + count;
+  txtNewInputBox.innerHTML = document.getElementById("poliet_truba").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){
+    diiv = document.getElementById(txtNewInputBox.id)
+    if (document.getElementById("itogo_podzem_gaz").textContent != "undefined"){
+      itogo = Number(document.getElementById("itogo_podzem_gaz").textContent);
+    }
+    else{
+      itogo = 0;
+    }
+    dlina1 = diiv.getElementsByTagName('input')[2];
+    dlina3 = 0;
+    if (dlina1.value != 'undefined'){
+      dlina3 += Number(dlina1.value);
+    }
+    else{
+      dlina3 += 0;
+    }
+    itogo -= dlina3;
+    // console.log(itogo)
+    document.getElementById("itogo_podzem_gaz").textContent = itogo;
+    diiv.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("poliet_trubi").appendChild(txtNewInputBox);
+  deleted_div = document.getElementById(txtNewInputBox.id);
+  // console.log(deleted_div)
+  a = deleted_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count;
+  }
+  var added_truba = document.getElementById(txtNewInputBox.id);
+  var dlina_1 = added_truba.getElementsByTagName('input')[2];
+  dlina_1.id = 'dlina_truba' + count ;
+  count = count + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_1 = 10;
+function createNewTruba_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "poliet_truba" + '-' + count_1;
+  txtNewInputBox.innerHTML = document.getElementById("poliet_truba").innerHTML;
+  input_1 = txtNewInputBox.getElementsByTagName('input')[0];
+  input_1.value = '';
+  input_2 = txtNewInputBox.getElementsByTagName('input')[1];
+  input_2.value = '';
+  input_3 = txtNewInputBox.getElementsByTagName('input')[2];
+  input_3.value = '';
+  input_4 = txtNewInputBox.getElementsByTagName('input')[3];
+  input_4.value = '';
+  input_5 = txtNewInputBox.getElementsByTagName('input')[4];
+  input_5.value = '';
+  input_6 = txtNewInputBox.getElementsByTagName('input')[5];
+  input_6.value = '';
+  input_7 = txtNewInputBox.getElementsByTagName('input')[6];
+  input_7.remove();
+  var input = document.createElement('input');
+  input.type = 'button';
+  input.value = '-';
+  input.className = txtNewInputBox.id;
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;";
+
+  input.onclick = function(){
+    diiv = document.getElementById(txtNewInputBox.id);
+    diiv.remove();
+  }
+
+  txtNewInputBox.appendChild(input);
+  document.getElementById("poliet_trubi").appendChild(txtNewInputBox);
+
+  count_1 = count_1 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count2 = 2;
+function createNewStalTruba() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "podzem_stal_truba" + '-' + count2;
+  txtNewInputBox.innerHTML = document.getElementById("podzem_stal_truba").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){
+    diiv = document.getElementById(txtNewInputBox.id)
+    if (document.getElementById("itogo_stalnoi_gaz").textContent != "itogo_stalnoi_gaz"){
+      itogo = Number(document.getElementById("itogo_stalnoi_gaz").textContent);
+    }
+    else{
+      itogo = 0;
+    }
+    dlina1 = diiv.getElementsByTagName('input')[2];
+    dlina3 = 0;
+    if (dlina1.value != 'undefined'){
+      dlina3 += Number(dlina1.value);
+    }
+    else{
+      dlina3 += 0;
+    }
+    itogo -= dlina3;
+    document.getElementById("itogo_stalnoi_gaz").textContent = itogo;
+    diiv.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("podzem_stal_trubi").appendChild(txtNewInputBox);
+  deleted_div = document.getElementById(txtNewInputBox.id);
+  a = deleted_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count2;
+  }
+  var added_truba = document.getElementById(txtNewInputBox.id);
+  var dlina_1 = added_truba.getElementsByTagName('input')[2];
+  dlina_1.id = 'stalnoi_truba_dlina' + count2 ;
+  count2 = count2 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_22 = 10;
+function createNewStalTruba_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:space-around;margin:10px 0 0 0"
+  txtNewInputBox.id = "podzem_stal_truba" + '-' + count_22;
+  txtNewInputBox.innerHTML = document.getElementById("podzem_stal_truba").innerHTML;
+  in_1 = txtNewInputBox.getElementsByTagName('input')[0];
+  in_1.value = '';
+  in_1.name = 'stalnoi_truba_diametr';
+  in_2 = txtNewInputBox.getElementsByTagName('input')[1];
+  in_2.value = '';
+  in_2.name= 'stalnoi_truba_kolvo';
+  in_3 = txtNewInputBox.getElementsByTagName('input')[2];
+  in_3.value = '';
+  in_3.name = 'stalnoi_truba_dlina';
+  in_4 = txtNewInputBox.getElementsByTagName('input')[3];
+  in_4.value = '';
+  in_4.name = 'stalnoi_truba_prim';
+  plus = txtNewInputBox.getElementsByTagName('input')[4];
+  plus.remove()
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 10px 0 15px"
+  input.onclick = function(){
+    diiv = document.getElementById(txtNewInputBox.id)
+    diiv.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("podzem_stal_trubi").appendChild(txtNewInputBox);
+  deleted_div = document.getElementById(txtNewInputBox.id);
+  a = deleted_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+  }
+  var added_truba = document.getElementById(txtNewInputBox.id);
+  var dlina_1 = added_truba.getElementsByTagName('input')[2];
+  count_22 = count_22 + 1;
+}
+</script>
+
+<script type="text/javascript">
+  function delete_tr_stal(name){
+  diiv = document.getElementById(name);
+  diiv.remove();
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count3 = 2;
+function createNewNadzemStalTruba() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px; margin-bottom:20px;"
+  txtNewInputBox.id = "nadzem_stal_truba" + '-' + count3;
+  txtNewInputBox.innerHTML = document.getElementById("nadzem_stal_truba").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){
+    diiv = document.getElementById(txtNewInputBox.id)
+    if (document.getElementById("itogo_nadzemnyi_gaz").textContent != "undefined"){
+      itogo = Number(document.getElementById("itogo_nadzemnyi_gaz").textContent);
+    }
+    else{
+      itogo = 0;
+    }
+    dlina1 = diiv.getElementsByTagName('input')[2];
+    dlina2 = 0;
+    if (dlina1.value != 'undefined'){
+      dlina2 += Number(dlina1.value);
+    }
+    else{
+      dlina2 += 0;
+    }
+    itogo -= dlina2;
+    document.getElementById("itogo_nadzemnyi_gaz").textContent = itogo;
+    diiv.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("nadzem_stal_trubi").appendChild(txtNewInputBox);
+  deleted_div = document.getElementById(txtNewInputBox.id);
+  a = deleted_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count3;
+  }
+  var added_truba = document.getElementById(txtNewInputBox.id);
+  var dlina_1 = added_truba.getElementsByTagName('input')[2];
+  dlina_1.id = 'nadzem_stal_truba_dlina' + count3 ;
+  count3 = count3 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_3 = 10;
+function createNewNadzemStalTruba_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px; margin-bottom:20px;"
+  txtNewInputBox.id = "nadzem_stal_truba" + '-' + count_3;
+  txtNewInputBox.innerHTML = document.getElementById("nadzem_stal_truba").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){
+    diiv = document.getElementById(txtNewInputBox.id)
+    diiv.remove();
+  }
+  in_1 = txtNewInputBox.getElementsByTagName('input')[0];
+  in_1.value = '';
+  in_2 = txtNewInputBox.getElementsByTagName('input')[1];
+  in_2.value = '';
+  in_3 = txtNewInputBox.getElementsByTagName('input')[2];
+  in_3.value = '';
+  plus = txtNewInputBox.getElementsByTagName('input')[3];
+  plus.remove()
+  txtNewInputBox.appendChild(input)
+  document.getElementById("nadzem_stal_trubi").appendChild(txtNewInputBox);
+  deleted_div = document.getElementById(txtNewInputBox.id);
+  var added_truba = document.getElementById(txtNewInputBox.id);
+  count_3 = count_3 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count4 = 2;
+function createNewShar_kran() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "shar_kran_pair" + count4;
+  txtNewInputBox.innerHTML = document.getElementById("shar_kran_pair").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();}
+  txtNewInputBox.appendChild(input)
+	document.getElementById("shar_kran_pairs").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count4;
+  }
+  count4 = count4 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_4 = 10;
+function createNewShar_kran_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "shar_kran_pair" + count_4;
+  txtNewInputBox.innerHTML = document.getElementById("shar_kran_pair").innerHTML;
+  document.getElementById("shar_kran_pairs").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  in_1 = created_div.getElementsByTagName('input')[0];
+  in_1.value = '';
+  in_2 = created_div.getElementsByTagName('input')[1];
+  in_2.value = '';
+  plus = created_div.getElementsByTagName('input')[2];
+  plus.value = '-'
+  plus.className = txtNewInputBox.id
+  plus.style = "width:30px;height:30px;margin:5px 0 0 20px"
+  plus.onclick = function(){txtNewInputBox.remove();}
+  count_4 = count_4 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_4 = 10;
+function createNewShar_kran_view2() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "shar_kran_pair" + count_4;
+  txtNewInputBox.innerHTML = document.getElementById("shar_kran_pair").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px"
+  input.onclick = function(){txtNewInputBox.remove();}
+  document.getElementById("shar_kran_pairs").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  in_1 = created_div.getElementsByTagName('input')[0];
+  in_1.value = '';
+  in_2 = created_div.getElementsByTagName('input')[1];
+  in_2.value = '';
+  plus = created_div.getElementsByTagName('input')[2];
+  plus.value = '-'
+  plus.className = txtNewInputBox.id
+  plus.style = "width:30px;height:30px;margin:5px 0 0 20px"
+  plus.onclick = function(){txtNewInputBox.remove();}
+
+  count_4 = count_4 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count5 = 2;
+function createNewtrubaFut() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "truba_fut" + count5;
+  txtNewInputBox.innerHTML = document.getElementById("truba_fut").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("trubi_fut").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count5;
+  }
+  count5 = count5 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_5 = 10;
+function createNewtrubaFut_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "truba_fut" + count_5;
+  txtNewInputBox.innerHTML = document.getElementById("truba_fut").innerHTML;
+
+  in_0 = txtNewInputBox.getElementsByTagName('input')[0];
+  in_0.value = '';
+  in_1 = txtNewInputBox.getElementsByTagName('input')[1];
+  in_1.value = '';
+  plus = txtNewInputBox.getElementsByTagName('input')[2];
+  plus.remove()
+
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();}
+
+
+  txtNewInputBox.appendChild(input)
+  document.getElementById("truba_futlyar").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+
+  count_5 = count_5 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count6 = 2;
+function createNewTrubaZashitFutlyar() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "zashitnyi_futlyar" + count6;
+  txtNewInputBox.innerHTML = document.getElementById("zashitnyi_futlyar").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("zashitnye_futlyari").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count6;
+  }
+  count6 = count6 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count_6 = 10;
+function createNewTrubaZashitFutlyar_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "zashitnyi_futlyar" + count_6;
+  txtNewInputBox.innerHTML = document.getElementById("zashitnyi_futlyar").innerHTML;
+
+  in_0 = txtNewInputBox.getElementsByTagName('input')[0];
+  in_0.value = '';
+  in_1 = txtNewInputBox.getElementsByTagName('input')[1];
+  in_1.value = '';
+  in_2 = txtNewInputBox.getElementsByTagName('input')[2];
+  in_2.value = '';
+  in_3 = txtNewInputBox.getElementsByTagName('input')[3];
+  in_3.value = '';
+
+  plus = txtNewInputBox.getElementsByTagName('input')[4];
+  plus.remove()
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("zashitnye_futlyari").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+  count_6 = count_6 + 1;
+}
+</script>
+
+<script type="text/JavaScript" async>
+var count7 = 2;
+function createNewTrubaOpora() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "opora" + count7;
+  txtNewInputBox.innerHTML = document.getElementById("opora").innerHTML;
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("opory").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+  for (var i = 0; i < a.length-1; i++){
+    var input = a[i];
+    input.name = input.name + "-" + count7;
+  }
+  count7 = count7 + 1;
+}
+</script>
+
+
+<script type="text/JavaScript" async>
+var count_7 = 10;
+function createNewTrubaOpora_view() {
+  var txtNewInputBox = document.createElement('div');
+  txtNewInputBox.style = "display:flex;justify-content:center;margin-top:20px;margin-right:1px;"
+  txtNewInputBox.id = "opora" + count_7;
+  txtNewInputBox.innerHTML = document.getElementById("opora").innerHTML;
+
+  in_0 = txtNewInputBox.getElementsByTagName('input')[0];
+  in_0.value = '';
+  in_1 = txtNewInputBox.getElementsByTagName('input')[1];
+  in_1.value = '';
+  plus = txtNewInputBox.getElementsByTagName('input')[2];
+  plus.remove()
+
+  var input = document.createElement('input')
+  input.type = 'button'
+  input.value = '-'
+  input.className = txtNewInputBox.id
+  input.style = "width:30px;height:30px;margin:5px 0 0 20px;"
+  input.onclick = function(){txtNewInputBox.remove();
+  }
+  txtNewInputBox.appendChild(input)
+  document.getElementById("opory").appendChild(txtNewInputBox);
+  created_div = document.getElementById(txtNewInputBox.id);
+  a = created_div.getElementsByTagName('input');
+
+  count_7 = count_7 + 1;
+}
+</script>
+
+<script type="text/javascript" async>
+    $(document).ready(function()
+     {
+        $('#select_cert').multiselect({
+            nonSelectedText:"Выберите сертификаты...",
+            enableFiltering: true,
+            maxHeight: 500,
+            enableCaseInsensitiveFiltering : true,
+            filterPlaceholder : "Поиск...",
+            dropUp: true,
+            templates: {
+               ul: '<ul class="multiselect-container dropdown-menu" style="font-size:16; width:600px;"></ul>',
+               filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" type="button"><i class="glyphicon glyphicon-remove-circle" style="font-weight:800;font-style: normal">x</i></button></span>',
+           },
+        });
+    });
+</script>
+
+<script type="text/JavaScript" async>
+function change_input_stalnoi() {
+  itogo = 0;
+  count_dublicate = count2 - 1;
+  if (count_dublicate == 1){
+    if (document.getElementById("stalnoi_truba_dlina").value != 'undefined'){
+      itogo += Number(document.getElementById("stalnoi_truba_dlina").value)
+    }
+    else{
+      itogo += 0
+    }
+  }
+  else{
+  for(var i = 1; i <= count_dublicate; i++){
+    if (i == 1){
+      if (document.getElementById("stalnoi_truba_dlina").value != 'undefined'){
+        itogo += Number(document.getElementById("stalnoi_truba_dlina").value)
+      }
+      else{
+        itogo += 0
+      }
+    }
+    else{
+      try{
+        var a = document.getElementById("stalnoi_truba_dlina"+i);
+        if (a.value != 'undefined'){
+          itogo += Number(a.value)
+        }
+        else{
+          itogo += 0
+        }
+      }
+      catch{
+        continue;
+      }
+    }
+  }
+}
+document.getElementById("itogo_stalnoi_gaz").textContent = itogo;
+}
+</script>
+
+<script type="text/JavaScript" async>
+function change_input_nadzemnyi() {
+  itogo = 0;
+  count_dublicate = count3 - 1;
+  if (count_dublicate == 1){
+    if (document.getElementById("nadzem_stal_truba_dlina").value != 'undefined'){
+      itogo += Number(document.getElementById("nadzem_stal_truba_dlina").value)
+    }
+    else{
+      itogo += 0
+    }
+  }
+  else{
+
+  for(var i = 1; i <= count_dublicate; i++){
+    if (i == 1){
+      if (document.getElementById("nadzem_stal_truba_dlina").value != 'undefined'){
+        itogo += Number(document.getElementById("nadzem_stal_truba_dlina").value)
+        console.log('document.getElementById("nadzem_stal_truba_dlina").value')
+        console.log(document.getElementById("nadzem_stal_truba_dlina").value)
+      }
+      else{
+        console.log('document.getElementById("nadzem_stal_truba_dlina").value')
+        console.log(document.getElementById("nadzem_stal_truba_dlina").value)
+        itogo += 0
+      }
+    }
+    else{
+      try{
+        // console.log('try')
+        var a = document.getElementById("nadzem_stal_truba_dlina"+i);
+        console.log(a.value)
+        // console.log(a.val)
+        if (a.value != 'undefined'){
+          itogo += Number(a.value)
+          // console.log(a.value)
+        }
+        else{
+          itogo += 0
+        }
+
+      }
+      catch{
+        continue;
+      }
+    }
+  }
+}
+ document.getElementById("itogo_nadzemnyi_gaz").textContent = itogo
+}
+</script>
+
+<script type="text/JavaScript" async>
+function change_input_podzem() {
+  itogo = 0;
+  count_dublicate = count - 1;
+  if (count_dublicate == 1){
+    if (document.getElementById("dlina_truba").value != 'undefined'){
+      itogo += Number(document.getElementById("dlina_truba").value)
+    }
+    else{
+      itogo += 0
+    }
+    if (document.getElementById("dlina_mufta").value != 'undefined'){
+      itogo += Number(document.getElementById("dlina_mufta").value)
+    }
+    else{
+      itogo += 0
+    }
+  }
+  else{
+
+  for(var i = 1; i <= count_dublicate; i++){
+    if (i == 1){
+      if (document.getElementById("dlina_truba").value != 'undefined'){
+        itogo += Number(document.getElementById("dlina_truba").value)
+      }
+      else{
+        itogo += 0
+      }
+    }
+    else{
+      try{
+        a = document.getElementById("dlina_truba"+i);
+        if (a.value != 'undefined'){
+          itogo += Number(document.getElementById("dlina_truba"+i).value)
+        }
+        else{
+          itogo += 0
+        }
+      }
+      catch{
+        continue;
+      }
+    }
+  }
+}
+ document.getElementById("itogo_podzem_gaz").textContent = itogo
+}
+</script>
+
+<script  type="text/javascript" async>
+function select_teh(sel){
+input = document.getElementById("select_tehnadzor_custom");
+value = sel.options[sel.selectedIndex].value;
+if (value == "Выберите технадзор"){
+  input.disabled = false;
+}
+else{
+  input.disabled = true;
+  input.value = "";
+}
+}
+</script>
+
+<script  type="text/javascript" async>
+function select_tehn(sel){
+select = document.getElementById("select_tehnadzor");
+value = sel.options[sel.selectedIndex].value;
+// console.log(value);
+{% for tehnadzor in context.tehnadzors %}
+distr = "{{tehnadzor.district}}";
+if (distr == value){
+  select.add(new Option("{{tehnadzor.person.fio}}","{{tehnadzor.person.fio}}"));
+}
+{% endfor %}
+
+{% for commission in context.commissions %}
+distr = "{{commission.district}}";
+if (distr == value){
+   document.getElementById("ks11_predsedatel_post").value = "{{commission.predsedatel.post}}"
+   document.getElementById("ks11_predsedatel_fio").value = "{{commission.predsedatel.fio}}"
+   document.getElementById("ks11_predstav_ekspl_fio").value = "{{commission.predstavitel.fio}}"
+   document.getElementById("ks11_predstav_ekspl_post").value = "{{commission.predstavitel.post}}"
+}
+{% endfor %}
+input = document.getElementById("select_raion_custom");
+if (value == "Выберите район"){
+input.disabled = false;
+}
+else{
+input.disabled = true;
+input.value = "";
+}
+}
+</script>
+
+<script  type="text/javascript" async>
+function select_kontragent_(sel){
+select = document.getElementById("select_kontragent");
+value = sel.options[sel.selectedIndex].value;
+{% for kontragent in context.kontragents %}
+input = document.getElementById("select_raion_custom");
+if (value == "Выберите контрагента")
+{
+  document.getElementById("name_kontragent").value = "";
+  document.getElementById("INN").value = "";
+  document.getElementById("KPP").value = "";
+  document.getElementById("Ur_address").value = "";
+  document.getElementById("telephone").value = "";
+  document.getElementById("ks11_predstav_podryadchika_post").value = "";
+  document.getElementById("ks11_predstav_podryadchika_fio").value = "";
+}
+else{
+  const search = '&quot;';
+  const replaceWith = '"';
+  const name = "{{kontragent.name_kontragent}}".split(search).join(replaceWith);
+  const ur_address = "{{kontragent.Ur_address}}".split(search).join(replaceWith);
+  const post = "{{kontragent.podpisant.post}}".split(search).join(replaceWith);
+  if (name == value)
+  {
+     document.getElementById("name_kontragent").value = name;
+     document.getElementById("INN").value = "{{kontragent.INN}}";
+     document.getElementById("KPP").value = "{{kontragent.KPP}}";
+     document.getElementById("Ur_address").value = ur_address;
+     if ("{{kontragent.telephone}}" != 'None'){
+       document.getElementById("telephone").value = "{{kontragent.telephone}}";
+     }
+     else{
+       document.getElementById("telephone").value = "";
+     }
+     document.getElementById("ks11_predstav_podryadchika_post").value = post;
+     document.getElementById("ks11_predstav_podryadchika_fio").value = "{{kontragent.podpisant.fio}}";
+  }
+}
+{% endfor %}
+}
+</script>
+
+</body>
+</html>

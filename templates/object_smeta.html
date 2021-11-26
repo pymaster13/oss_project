@@ -1,0 +1,78 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if error %}
+<div class="alert-reg">
+<div class="alert alert-danger" role="alert">
+  {{error}}
+</div>
+</div>
+{% endif %}
+
+{% if success %}
+<div class="alert-reg">
+<div class="alert alert-success" role="alert">
+  {{success}}
+</div>
+</div>
+{% endif %}
+
+<form class="" action="{% url 'object_smeta' %}" method="post">
+  {%csrf_token%}
+
+<div class="" style="margin-left:20%;display:flex;justify:content:center;align-items:center;">
+<div class="" style="margin-top:30px;">
+<div class="border" style="margin:0 auto;width:800px;">
+<center>
+<select id="select_object" name="select_object" class="form-control">
+  {% if not selected %}
+  <option>Выберите объект</option>
+  {% else %}
+  <option>{{context.object.name_object}}</option>
+  {% endif %}
+{% for object in context.objects %}
+ {% if object.name_object != context.object.name_object %}
+ <option value="{{object.name_object}}"">{{object.name_object}}</option>
+ {% endif %}
+{% endfor %}
+</select>
+</div>
+</div>
+<button class="btn btn-primary" style="background: #94b8d6;margin:30px 0 0 50px" type="submit">Выбрать</button>
+</div>
+
+</form>
+
+<hr>
+
+{% if selected %}
+<form class="" action="{% url 'object_add_data_smeta' %}" method="post">
+  {%csrf_token%}
+<center>
+<div class="" style="margin-top:50px;width:30%">
+  <label for="summa_proektnoi_smeti">Сумма проектной сметы</label>
+  <input type="hidden" class="form-control" id="" name="select_object" style="" value="{{context.object.name_object}}">
+  <input type="text" class="form-control" id="summa_proektnoi_smeti" name="summa_proektnoi_smeti" style="margin:5px 0 20px 0" value="{{context.object.smeta.summa_proektnoi_smeti}}">
+  <label for="summa_utv_smeti">Сумма утвержденной сметы</label>
+  <input type="text" class="form-control" id="summa_utv_smeti" name="summa_utv_smeti" style="margin:5px 0 20px 0" value="{{context.object.smeta.summa_utv_smeti}}">
+  <label for="summa_ks2_bez_nds">Сумма КС 2 без НДС</label>
+  <input type="text" class="form-control" id="summa_ks2_bez_nds" name="summa_ks2_bez_nds" style="margin:5px 0 20px 0" value="{{context.object.smeta.summa_ks2_bez_nds}}">
+  <label for="date_ks2">Дата КС 2</label>
+  <input type="date" class="form-control" id="date_ks2" name="date_ks2" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_ks2}}">
+  <label for="date_ks11">Дата начала работ (КС 14)</label>
+  <input type="month" class="form-control" id="date_ks11" name="date_nach_rabot" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_nach_rabot}}">
+  <label for="date_nach_zakr">Дата начала закрытия (КС 14)</label>
+  <input type="date" class="form-control" id="date_nach_zakr" name="date_nach_zakr" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_nach_zakr}}">
+  <label for="date_kon_zakr">Дата конца закрытия (КС 14)</label>
+  <input type="date" class="form-control" id="date_ks11" name="date_kon_zakr" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_kon_zakr}}">
+  <label for="nomer_dogovor">Номер договора</label>
+  <input type="text" class="form-control" id="nomer_dogovor" name="nomer_dogovor" style="margin:5px 0 20px 0" value="{{context.object.smeta.nomer_dogovor}}">
+  <label for="date_dogovor">Дата составления договора</label>
+  <input type="date" class="form-control" id="date_dogovor" name="date_dogovor" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_dogovor}}">
+</div>
+<button class="btn btn-primary" style="background: #94b8d6;margin:30px 0 0 0" type="submit">Добавить (изменить) данные</button>
+</center>
+</form>
+{% endif %}
+
+{% endblock %}

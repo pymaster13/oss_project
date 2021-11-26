@@ -1,0 +1,1513 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if error %}
+<div class="alert-reg">
+<div class="alert alert-danger" role="alert">
+  {{error}}
+</div>
+</div>
+{% endif %}
+
+{% if success %}
+<div class="alert-reg">
+<div class="alert alert-success" role="alert">
+  {{success}}
+</div>
+</div>
+{% endif %}
+
+<form class="" action="{% url 'object_select_view' %}" method="post">
+  {%csrf_token%}
+
+<div class="" style="margin-left:20%;display:flex;justify:content:center;align-items:center;">
+<div class="" style="margin-top:30px;">
+<div class="border" style="margin:0 auto;width:800px;">
+<center>
+<select id="select_object" name="select_object" class="form-control">
+  {% if not selected %}
+  <option>Выберите объект</option>
+  {% else %}
+  <option >{{context.object.name_object}}</option>
+  {% endif %}
+{% for object in context.objects %}
+ {% if object.name_object != context.object.name_object %}
+ <option value="{{object.name_object}}"">{{object.name_object}}</option>
+ {% endif %}
+{% endfor %}
+</select>
+</div>
+
+<div class="border" style="margin-top:20px;width:800px;">
+<center>
+<select id="select_field" name="select_field" class="form-control" multiple="multiple">
+  {% for field_db, field_name in context.field_db_names %}
+  <option value="{{field_db}}" selected>{{field_name}}</option>
+  {% endfor %}
+
+{% if context.field_db %}
+
+{% for field_db, field in context.fields.items %}
+   {% if field_db not in context.field_db %}
+  <option value="{{field_db}}">{{field}}</option>
+   {% endif %}
+{% endfor %}
+
+{% else %}
+
+{% for field_db, field in context.fields.items %}
+<option value="{{field_db}}">{{field}}</option>
+{% endfor %}
+
+{% endif %}
+</select>
+
+</div>
+
+</div>
+
+<div class="" style="display:flex;">
+<div class="">
+<button class="btn btn-primary" style="background: #94b8d6;color:rgba(0,0,0,.5);margin-top:40%;margin-left:50%" type="submit">Выбрать</button>
+</div>
+<div class="">
+<input class="btn btn-primary" style="background: #f24b4b;color:rgba(0,0,0,.5);margin-top:41%;margin-left:70%" type="submit" name="delete" value="Удалить"></input>
+</div>
+</div>
+</div>
+</form>
+
+<hr>
+
+<form class="" action="{% url 'object_update' %}" method="post">
+  {%csrf_token%}
+
+<input type="text" name="obj" style="display:none;" value="{{context.object.name_object}}">
+
+{% for field_db, field_name, field_value in context.field_db_names_values %}
+
+{% if field_db == 'tehnadzor'%}
+
+<div class="" style="display:block;margin-top:20px;">
+<center><b><span style="margin:10px 0 10px 0">Технадзор</span></b>
+<div class="">
+<label for="tehnadzor_post" style="margin-top:10px;">Должность</label>
+{% if context.object.tehnadzor.person.post %}
+<input id='tehnadzor_post' name="tehnadzor_post" type="text" style="width:500px;" class="form-control" value="{{context.object.tehnadzor.person.post}}">
+{% else %}
+<input id='tehnadzor_post' name="tehnadzor_post" type="text" style="width:500px;" class="form-control" value="">
+{% endif %}
+<label for="tehnadzor_fio" style="margin-top:10px;">ФИО</label>
+{% if context.object.tehnadzor.person.fio %}
+<input id='tehnadzor_fio' name="tehnadzor_fio" type="text" style="width:500px;margin-bottom:10px" class="form-control" value="{{context.object.tehnadzor.person.fio}}">
+{% else %}
+<input id='tehnadzor_fio' name="tehnadzor_fio" type="text" style="width:500px;margin-bottom:10px;" class="form-control" value="">
+{% endif %}
+</div>
+</div>
+
+{% elif field_db == 'prodavl'%}
+<div class="" style="margin-top:20px;">
+    <div class="" style="margin-top:10px">
+    <center><b><span>Дополнительные данные для актов ИТД, связанных с пунктом "Продавливание"</span></b>
+    <div class="" style='display:flex;justify-content:center;margin-top:20px'>
+    <span style="margin-top:8px">Труба</span>
+    <span style="margin: 8px 10px 0 10px">⌀</span>
+    {% if context.object.prodavl.truba.diametr %}
+    <input name="prodav_diametr" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.prodavl.truba.diametr}}">
+    {% else %}
+    <input name="prodav_diametr" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    <span style="margin: 8px 10px 0 10px">x</span>
+    {% if context.object.prodavl.truba.x %}
+    <input name="prodav_x" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.prodavl.truba.x}}">
+    {% else %}
+    <input name="prodav_x" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    {% if context.object.prodavl.truba.dlina %}
+    <input name="prodav_dlina" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.prodavl.truba.dlina}}">
+    {% else %}
+    <input name="prodav_dlina" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="">
+    <span style="margin: 10px 10px 0 10px">м</span>
+    {% endif %}
+    </div>
+
+    <div style=display:flex;justify-content:center;margin-top:20px;padding-right:10px;padding-left:10px;">
+    <span style='margin-left:20px'>ПК0 +</span>
+    {% if context.object.prodavl.pk0_1_diam %}
+    <input name="pk0_1_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.prodavl.pk0_1_diam}}">
+    {% else %}
+    <input name="pk0_1_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    <span style='margin-left:20px'>до</span>
+    <span style="margin-left:25px">ПК0 +</span>
+    {% if context.object.prodavl.pk0_2_diam %}
+    <input name="pk0_2_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.prodavl.pk0_2_diam}}">
+    {% else %}
+    <input name="pk0_2_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+
+    </div>
+    </div>
+</div>
+
+{% elif field_db == 'rostehnadzor'%}
+<div class="" style="margin-top:20px;">
+    <div class="" style="margin-top:10px">
+    <center><b><span>Дополнительные данные для актов ИТД, связанных с пунктом "Ростехнадзор"</span></b>
+    <div class="" style='display:flex;justify-content:center;margin-top:20px'>
+    <span style="margin-top:8px">Труба</span>
+    <span style="margin: 8px 10px 0 10px">⌀</span>
+    {% if context.object.rostehnadzor.truba.diametr %}
+    <input name="rosteh_diametr" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.rostehnadzor.truba.diametr}}">
+    {% else %}
+    <input name="rosteh_diametr" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    <span style="margin: 8px 10px 0 10px">x</span>
+    {% if context.object.rostehnadzor.truba.x %}
+    <input name="rosteh_x" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.rostehnadzor.truba.x}}">
+    {% else %}
+    <input name="rosteh_x" type="text" style="width:100px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    </div>
+    <div style=display:flex;justify-content:center;margin-top:20px;padding-right:10px;padding-left:10px;">
+    <span>ПК</span>
+    {% if context.object.rostehnadzor.pk1 %}
+    <input name="pk1" type="text" style="width:50px;height:30px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.rostehnadzor.pk1}}">
+    {% else %}
+    <input name="pk1" type="text" style="width:50px;height:30px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    <span>+</span>
+    {% if context.object.rostehnadzor.pk1_diam %}
+    <input name="pk1_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.rostehnadzor.pk1_diam}}">
+    {% else %}
+    <input name="pk1_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    <span style="margin-left:15px">-</span>
+    <span style="margin-left:20px">ПК</span>
+    {% if context.object.rostehnadzor.pk2 %}
+    <input name="pk2" type="text" style="width:50px;height:30px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.rostehnadzor.pk2}}">
+    {% else %}
+    <input name="pk2" type="text" style="width:50px;height:30px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    {% if context.object.rostehnadzor.pk2_diam %}
+    <input name="pk2_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="{{context.object.rostehnadzor.pk2_diam}}">
+    {% else %}
+    <input name="pk2_diam" type="text" style="width:80px;height:30px;margin:0 10px 0 15px;" class="form-control" value="">
+    {% endif %}
+    </div>
+    </div>
+</div>
+
+{% elif field_db == 'smeta_data'%}
+<div class="" style="margin-top:20px;">
+<center>
+<b>
+  <span>Информация от сметчика:</span>
+</b>
+<div class="" style="margin-top:20px;width:30%">
+  <label for="summa_proektnoi_smeti">Сумма проектной сметы</label>
+  {% if context.object.smeta.summa_proektnoi_smeti %}
+  <input type="text" class="form-control" id="summa_proektnoi_smeti" name="summa_proektnoi_smeti" style="margin:5px 0 20px 0" value="{{context.object.smeta.summa_proektnoi_smeti}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="summa_proektnoi_smeti" name="summa_proektnoi_smeti" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="summa_utv_smeti">Сумма утвержденной сметы</label>
+  {% if context.object.smeta.summa_utv_smeti %}
+  <input type="text" class="form-control" id="summa_utv_smeti" name="summa_utv_smeti" style="margin:5px 0 20px 0" value="{{context.object.smeta.summa_utv_smeti}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="summa_utv_smeti" name="summa_utv_smeti" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="summa_ks2_bez_nds">Сумма КС 2 без НДС</label>
+  {% if context.object.smeta.summa_ks2_bez_nds %}
+  <input type="text" class="form-control" id="summa_ks2_bez_nds" name="summa_ks2_bez_nds" style="margin:5px 0 20px 0" value="{{context.object.smeta.summa_ks2_bez_nds}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="summa_ks2_bez_nds" name="summa_ks2_bez_nds" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="date_ks2">Дата КС 2</label>
+  {% if context.object.smeta.date_ks2_html %}
+  <input type="date" class="form-control" id="date_ks2" name="date_ks2" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_ks2_html}}"></input>
+  {% else %}
+  <input type="date" class="form-control" id="date_ks2" name="date_ks2" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="date_ks11">Дата начала работ (КС 11)</label>
+  {% if context.object.smeta.date_nach_rabot_html %}
+  <input type="month" class="form-control" id="date_ks11" name="date_nach_rabot" style="margin:5px 0 20px 0"  value="{{context.object.smeta.date_nach_rabot_html}}"></input>
+  {% else %}
+  <input type="month" class="form-control" id="date_ks11" name="date_nach_rabot" style="margin:5px 0 20px 0"  value=""></input>
+  {% endif %}
+  <label for="date_nach_zakr">Дата начала закрытия (КС 14)</label>
+  {% if context.object.smeta.date_nach_zakr_html %}
+  <input type="date" class="form-control" id="date_nach_zakr" name="date_nach_zakr" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_nach_zakr_html}}"></input>
+  {% else %}
+  <input type="date" class="form-control" id="date_nach_zakr" name="date_nach_zakr" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="date_kon_zakr">Дата конца закрытия (КС 14)</label>
+  {% if context.object.smeta.date_kon_zakr_html %}
+  <input type="date" class="form-control" id="date_kon_zakr" name="date_kon_zakr" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_kon_zakr_html}}"></input>
+  {% else %}
+  <input type="date" class="form-control" id="date_kon_zakr" name="date_kon_zakr" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="nomer_dogovor">Номер договора</label>
+  {% if context.object.smeta.nomer_dogovor %}
+  <input type="text" class="form-control" id="nomer_dogovor" name="nomer_dogovor" style="margin:5px 0 20px 0" value="{{context.object.smeta.nomer_dogovor}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="nomer_dogovor" name="nomer_dogovor" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+  <label for="date_dogovor">Дата составления договора</label>
+  {% if context.object.smeta.date_dogovor_html %}
+  <input type="date" class="form-control" id="date_dogovor" name="date_dogovor" style="margin:5px 0 20px 0" value="{{context.object.smeta.date_dogovor_html}}"></input>
+  {% else %}
+  <input type="date" class="form-control" id="date_dogovor" name="date_dogovor" style="margin:5px 0 20px 0" value=""></input>
+  {% endif %}
+</div>
+</center>
+</div>
+
+{% elif field_db == 'dop_dann_ob_ustanovke_opor'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Доп. данные (установка опор):</span>
+  </b>
+  <div class="opory" id="opory" style="display:block;justify-content:center;">
+    {% if context.dop_dann_ob_ustanovke_opors %}
+    {% for index, item in context.dop_dann_ob_ustanovke_opors %}
+    {% if index == 0 %}
+    <div class="opora" id="opora" style="display:flex;justify-content:center;margin-top:20px;">
+    {% else %}
+    <div class="opora" id="opora-{{index}}" style="display:flex;justify-content:center;margin-top:20px;">
+    {% endif %}
+    <span style= "margin-top:5px;">Труба ст.</span>
+    <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+    {% if item.diametr %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_diametr" value="{{item.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_diametr" value=""></input>
+    {% endif %}
+    <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+    {% if item.x %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_kolvo" value="{{item.x}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_kolvo" value=""></input>
+    {% endif %}
+    {% if index == 0 %}
+    <input type="button" value="+" onclick="createNewTrubaOpora_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    {% else %}
+    <input type="button" value="-" onclick="delete_tr_stal('truba_fut-{{index}}');" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+    {% else %}
+    <div class="opora" id="opora" style="display:flex;justify-content:center;margin-top:20px;">
+      <span style= "margin-top:5px;">Труба ст.</span>
+      <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+      {% if item.diametr %}
+      <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_diametr" value="{{item.diametr}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_diametr" value=""></input>
+      {% endif %}
+      <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+      {% if item.x %}
+      <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_kolvo" value="{{item.x}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_kolvo" value=""></input>
+      {% endif %}
+      <input type="button" value="+" onclick="createNewTrubaOpora_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    </div>
+    {% endif %}
+</center>
+</div>
+
+{% elif field_db == 'dop_dann_futlyar_na_vyhode'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Доп. данные (футляр на выходе из земли):</span>
+  </b>
+  <div class="truba_futlyar" id='truba_futlyar' style="margin:1%;display:block;justify-content:center;">
+    {% if context.dop_dann_futlyar_na_vyhodes %}
+    {% for index, item in context.dop_dann_futlyar_na_vyhodes %}
+    {% if index == 0 %}
+    <div class="truba_fut" id="truba_fut" style="display:flex;justify-content:center;margin-top:20px;">
+    {% else %}
+    <div class="truba_fut" id="truba_fut-{{index}}" style="display:flex;justify-content:center;margin-top:20px;">
+    {% endif %}
+    <span style= "margin-top:5px;">Труба </span>
+    <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+    {% if item.diametr %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_diametr" value="{{item.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_diametr" value=""></input>
+    {% endif %}
+    <span style="min-width:20px;max-width:20px; margin-left:15px;margin-top:5px;">x</span>
+    {% if item.x %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_kolvo" value="{{item.x}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_kolvo" value=""></input>
+    {% endif %}
+    {% if index == 0 %}
+    <input type="button" value="+" onclick="createNewtrubaFut_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    {% else %}
+    <input type="button" value="-" onclick="delete_tr_stal('truba_fut-{{index}}');" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% else %}
+    <div class="truba_fut" id="truba_fut" style="display:flex;justify-content:center;margin-top:20px;">
+    <span style= "margin-top:5px;">Труба </span>
+    <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+    {% if item.diametr %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_diametr" value="{{item.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_diametr" value=""></input>
+    {% endif %}
+    <span style="min-width:20px;max-width:20px; margin-left:15px;margin-top:5px;">x</span>
+    {% if item.x %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_kolvo" value="{{item.x}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_ob_ustanovke_futlyarov_truba_kolvo" value=""></input>
+    {% endif %}
+    <input type="button" value="+" onclick="createNewtrubaFut_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+  {% endif %}
+  </div>
+</center>
+</div>
+
+{% elif field_db == 'dop_dann_gazopr_v_zashit'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Доп. данные (прокладка газопровода):</span>
+  </b>
+  <div class="polietilen_gazoprovod" style="margin:1%;display:block;justify-content:center;">
+    <div class="zashitnye_futlyari" id="zashitnye_futlyari" style="display:block;justify-content:center;">
+      {% if context.dop_dann_gazopr_v_zashits %}
+      {% for index, item in context.dop_dann_gazopr_v_zashits %}
+      {% if index == 0 %}
+      <div class="zashitnyi_futlyar" id="zashitnyi_futlyar" style="display:flex;justify-content:center;margin-top:20px;">
+      {% else %}
+      <div class="zashitnyi_futlyar" id="zashitnyi_futlyar-{{index}}" style="display:flex;justify-content:center;margin-top:20px;">
+      {% endif %}
+          <span style= "margin-top:5px;min-width:250px;max-width:250px">Труба ПЭ100 ГАЗ SDR11</span>
+          <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+          {% if item.truba1.diametr %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_diametr" value="{{item.truba1.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_diametr" value=""></input>
+          {% endif %}
+          <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+          {% if item.truba1.x %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_kolvo" value="{{item.truba1.x}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_kolvo" value=""></input>
+          {% endif %}
+          <span style= "margin-left:70px;margin-top:5px;">Труба ст.</span>
+          <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+          {% if item.truba2.diametr %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_diametr" value="{{item.truba2.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_diametr" value=""></input>
+          {% endif %}
+          <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+          {% if item.truba2.x %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_kolvo" value="{{item.truba2.x}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_kolvo" value=""></input>
+          {% endif %}
+          {% if index == 0 %}
+          <input type="button" value="+" onclick="createNewTrubaZashitFutlyar_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+          {% else %}
+          <input type="button" value="-" onclick="delete_tr_stal('zashitnyi_futlyar-{{index}}');" style="width:30px;height:30px;margin:5px 0 0 20px;">
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="zashitnyi_futlyar" id="zashitnyi_futlyar" style="display:flex;justify-content:center;margin-top:20px;">
+          <span style= "margin-top:5px;min-width:250px;max-width:250px">Труба ПЭ100 ГАЗ SDR11</span>
+          <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+          {% if item.truba1.diametr %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_diametr" value="{{item.truba1.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_diametr" value=""></input>
+          {% endif %}
+          <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+          {% if item.truba1.x %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_kolvo" value="{{item.truba1.x}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_kolvo" value=""></input>
+          {% endif %}
+          <span style= "margin-left:70px;margin-top:5px;">Труба ст.</span>
+          <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+          {% if item.truba2.diametr %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_diametr" value="{{item.truba2.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_diametr" value=""></input>
+          {% endif %}
+          <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+          {% if item.truba2.x %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_kolvo" value="{{item.truba2.x}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_gazopr_v_zashit_truba_kolvo" value=""></input>
+          {% endif %}
+          <input type="button" value="+" onclick="createNewTrubaZashitFutlyar_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+        {% endif %}
+    </div>
+    </div>
+</center>
+</div>
+
+{% elif field_db == 'dop_dann_sharovyi_kran'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Доп. данные (шаровый кран):</span>
+  </b>
+  <div class="sharovyi_kran" style="margin:1%;display:block;justify-content:center;">
+    <div class="shar_kran_pairs" id="shar_kran_pairs" style="display:block;justify-content:center;">
+  {% if context.dop_dann_sharovyi_krans %}
+  {% for index, item in context.dop_dann_sharovyi_krans %}
+
+    {% if index == 0 %}
+    <div class="shar_kran_pair" id="shar_kran_pair" style="display:flex;justify-content:center;margin-top:20px; margin-bottom:5px;">
+    {% else %}
+    <div class="shar_kran_pair" id="shar_kran_pair-{{index}}" style="display:flex;justify-content:center;margin-top:20px; margin-bottom:5px;">
+    {% endif %}
+
+    <span style= "margin-top:5px;min-width:170px;max-width:170px">ПЭ100 SDR11 кран </span>
+    <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+    {% if item.kran.diametr %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran" value="{{item.kran.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran" value=""></input>
+    {% endif %}
+    <span style= "min-width:240px;max-width:240px; margin-left:70px;margin-top:5px;">Муфта ПЭ 100 ГАЗ SDR11</span>
+    <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+    {% if item.mufta.diametr %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran_mufta" value="{{item.mufta.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran_mufta" value=""></input>
+    {% endif %}
+    {% if index == 0 %}
+    <input type="button" value="+" onclick="createNewShar_kran_view();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    {% else %}
+    <input type="button" value="-" onclick="delete_tr_stal('shar_kran_pair-{{index}}');" style="width:30px;height:30px;margin:5px 0 0 20px;">
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="shar_kran_pair" id="shar_kran_pair" style="display:flex;justify-content:center;margin-top:20px; margin-bottom:5px;">
+  <span style= "margin-top:5px;min-width:170px;max-width:170px">ПЭ100 SDR11 кран </span>
+  <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+  {% if item.kran.diametr %}
+  <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran" value="{{item.kran.diametr}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran" value=""></input>
+  {% endif %}
+  <span style= "min-width:240px;max-width:240px; margin-left:70px;margin-top:5px;">Муфта ПЭ 100 ГАЗ SDR11</span>
+  <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+  {% if item.mufta.diametr %}
+  <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran_mufta" value="{{item.mufta.diametr}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="truba" style="width:100px;" name="dop_dann_sharovyi_kran_mufta" value=""></input>
+  {% endif %}
+  <input type="button" value="+" onclick="createNewShar_kran_view2();" style="width:30px;height:30px;margin:5px 0 0 20px;">
+  {% endif %}
+  </div>
+  </div>
+</center>
+</div>
+
+{% elif field_db == 'opora'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Опора под газопровод:</span>
+  </b>
+  <div class="razmeshenie" style="width:40%;">
+    <div class="Razm_data_nomer" style="display:flex;justify-content:center;">
+    <div class="form-group" style="margin:20px 10px 20px 10px;width:20%;">
+      <label for="Data_razm">Диаметр, м</label>
+      {% if context.object.opora.diametr %}
+      <input type="text" class="form-control" id="Data_razm" name="opora_pod_gazoprovod_diametr" value="{{context.object.opora.diametr}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="Data_razm" name="opora_pod_gazoprovod_diametr" value=""></input>
+      {% endif %}
+    </div>
+    <div class="form-group" style="margin:55px 5px 20px 5px;width:5%;">
+      <span>x</span>
+    </div>
+    <div class="form-group" style="margin:52px 10px 0 0;width:15%;">
+      {% if context.object.opora.x %}
+      <input type="text" class="form-control" id="opora_pod_gazoprovod_x" name="opora_pod_gazoprovod_x" value="{{context.object.opora.x}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="opora_pod_gazoprovod_x" name="opora_pod_gazoprovod_x" value=""></input>
+      {% endif %}
+    </div>
+    <div class="form-group" style="margin:20px 10px 20px 10px;width:20%;">
+      <label for="Nomer_razm">Длина, м</label>
+      {% if context.object.opora.dlina %}
+      <input type="text" class="form-control" id="Nomer_razm" name="opora_pod_gazoprovod_dlina" value="{{context.object.opora.dlina}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="Nomer_razm" name="opora_pod_gazoprovod_dlina" value=""></input>
+      {% endif %}
+    </div>
+    <div class="form-group" style="margin:20px;width:30%;">
+      <label for="Nomer_razm">Количество, шт</label>
+      {% if context.object.opora.kolvo %}
+      <input type="text" class="form-control" id="Nomer_razm" name="opora_pod_gazoprovod_kolvo" value="{{context.object.opora.kolvo}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="Nomer_razm" name="opora_pod_gazoprovod_kolvo" value=""></input>
+      {% endif %}
+    </div>
+    </div>
+  </div>
+</center>
+</div>
+
+{% elif field_db == 'futlyar_na_vyhode'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Футляр на выходе земли:</span>
+  </b>
+  <div class="razmeshenie" style="width:40%;">
+    <div class="Razm_data_nomer" style="display:flex;justify-content:center;">
+    <div class="form-group" style="margin:20px;width:25%;">
+      <label for="Data_razm">Диаметр, м</label>
+      {% if context.object.futlyar_na_vyhode.diametr %}
+      <input type="text" class="form-control" id="Data_razm" name="futlyar_na_vyhode_diametr" value="{{context.object.futlyar_na_vyhode.diametr}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="Data_razm" name="futlyar_na_vyhode_diametr" value=""></input>
+      {% endif %}
+    </div>
+    <div class="form-group" style="margin:55px 10px 20px 5px;width:5%;">
+      <span>x</span>
+    </div>
+    <div class="form-group" style="margin:52px 10px 0 0;width:15%;">
+      {% if context.object.futlyar_na_vyhode.x %}
+      <input type="text" class="form-control" id="futlyar_na_vyhode_x" name="futlyar_na_vyhode_x" value="{{context.object.futlyar_na_vyhode.x}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="futlyar_na_vyhode_x" name="futlyar_na_vyhode_x" value=""></input>
+      {% endif %}
+    </div>
+    <div class="form-group" style="margin:20px;width:20%;">
+      <label for="Nomer_razm">Длина, м</label>
+      {% if context.object.futlyar_na_vyhode.dlina %}
+      <input type="text" class="form-control" id="Nomer_razm" name="futlyar_na_vyhode_dlina" value="{{context.object.futlyar_na_vyhode.dlina}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="Nomer_razm" name="futlyar_na_vyhode_dlina" value=""></input>
+      {% endif %}
+    </div>
+    <div class="form-group" style="margin:20px;width:30%;">
+      <label for="Nomer_razm">Количество, шт</label>
+      {% if context.object.futlyar_na_vyhode.kolvo %}
+      <input type="text" class="form-control" id="Nomer_razm" name="futlyar_na_vyhode_kolvo" value="{{context.object.futlyar_na_vyhode.kolvo}}"></input>
+      {% else %}
+      <input type="text" class="form-control" id="Nomer_razm" name="futlyar_na_vyhode_kolvo" value=""></input>
+      {% endif %}
+    </div>
+    </div>
+  </div>
+</center>
+</div>
+
+{% elif field_db == 'zashitnyi_futlyar'%}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Защитный футляр:</span>
+  </b>
+<div class="razmeshenie" style="width:30%;">
+  <div class="Razm_data_nomer" style="display:flex;justify-content:center;">
+  <div class="form-group" style="margin:20px;width:27%;">
+    <label for="zashit_futlyar_diametr">Диаметр, м</label>
+    {% if context.object.zashitnyi_futlyar.diametr %}
+    <input type="text" class="form-control" id="zashit_futlyar_diametr" name="zashit_futlyar_diametr" value="{{context.object.zashitnyi_futlyar.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="zashit_futlyar_diametr" name="zashit_futlyar_diametr" value=""></input>
+    {% endif %}
+  </div>
+  <div class="form-group" style="margin:55px 20px 20px 5px;width:5%;">
+    <span>x</span>
+  </div>
+  <div class="form-group" style="margin:52px 20px 0 0;width:20%;">
+    {% if context.object.zashitnyi_futlyar.x %}
+    <input type="text" class="form-control" id="zashit_futlyar_x" name="zashit_futlyar_x" value="{{context.object.zashitnyi_futlyar.x}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="zashit_futlyar_x" name="zashit_futlyar_x" value=""></input>
+    {% endif %}
+  </div>
+  <div class="form-group" style="margin:20px;width:27%;">
+    <label for="zashit_futlyar_dlina">Длина, м</label>
+    {% if context.object.zashitnyi_futlyar.dlina %}
+    <input type="text" class="form-control" id="zashit_futlyar_dlina" name="zashit_futlyar_dlina" value="{{context.object.zashitnyi_futlyar.dlina}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="zashit_futlyar_dlina" name="zashit_futlyar_dlina" value=""></input>
+    {% endif %}
+  </div>
+  </div>
+</div>
+</center>
+</div>
+
+{% elif field_db == 'svarshik2'%}
+
+<div class="" style="margin-top:10px">
+<center>
+  <b>
+    <span>Сварщик (сталь):</span>
+  </b>
+<div class="" style="display:flex;margin-top:20px;">
+  <label for="svarshik_stal" style="width:50px;margin:5px 0 0 20px;">ФИО</label>
+  {% if context.object.svarshik2.fio %}
+  <input type="text" id="svarshik_stal" name="svarshik2_fio" class="form-control" style="margin-left:20px;" value="{{context.object.svarshik2.fio}}"></input>
+  {% else %}
+  <input type="text" id="svarshik_stal" name="svarshik2_fio" class="form-control" style="margin-left:20px;" value=""></input>
+  {% endif %}
+  <label for="diametr_stal_styki" style="margin-left:15px;width:250px;margin-top:5px;">⌀ сваренных стыков</label>
+  {% if context.object.svarshik2.diametr %}
+  <input type="text" id="diametr_stal_styki" name="svarshik2_diametr" class="form-control" style="width:100px;" value="{{context.object.svarshik2.diametr}}"></input>
+  {% else %}
+  <input type="text" id="diametr_stal_styki" name="svarshik2_diametr" class="form-control" style="width:100px;" value=""></input>
+  {% endif %}
+  <label for="kolvo_stal_styki" style="margin-left:15px;width:120px;margin-top:5px;">Кол-во</label>
+  {% if context.object.svarshik2.kolvo %}
+  <input type="text" id="kolvo_stal_styki" name="svarshik2_kolvo" class="form-control" style="width:70px;" value="{{context.object.svarshik2.kolvo}}"></input>
+  {% else %}
+  <input type="text" id="kolvo_stal_styki" name="svarshik2_kolvo" class="form-control" style="width:70px;" value=""></input>
+  {% endif %}
+  <label for="date_stal" style="margin-left:15px;width:250px;">Дата сварки</label>
+  {% if context.object.svarshik2.date_svarki_html %}
+  <input type="date" id="date_stal" name="svarshik2_date_svarki" class="form-control" style="width:40%;margin-right:20px;" value="{{context.object.svarshik2.date_svarki_html}}"></input>
+  {% else %}
+  <input type="date" id="date_stal" name="svarshik2_date_svarki" class="form-control" style="width:40%;margin-right:20px;" value=""></input>
+  {% endif %}
+</div>
+</div>
+
+{% elif field_db == 'svarshik1'%}
+
+<div class="" style="margin-top:10px">
+<center>
+  <b>
+  <span>Сварщик (полиэтилен):</span>
+  </b>
+<div class="" style="display:flex;margin-top:20px;">
+  <label for="svarshik_polietilen" style="width:50px;margin:5px 0 0 20px;">ФИО</label>
+  {% if context.object.svarshik1.fio %}
+  <input type="text" id="svarshik_polietilen" name="svarshik1_fio" class="form-control" style="margin-left:20px;" value="{{context.object.svarshik1.fio}}"></input>
+  {% else %}
+  <input type="text" id="svarshik_polietilen" name="svarshik1_fio" class="form-control" style="margin-left:20px;" value=""></input>
+  {% endif %}
+  <label for="diametr_poliet_styki" style="margin-left:15px;width:250px;margin-top:5px;">⌀ сваренных стыков</label>
+  {% if context.object.svarshik1.diametr %}
+  <input type="text" id="diametr_poliet_styki" name="svarshik1_diametr" class="form-control" style="width:100px;" value="{{context.object.svarshik1.diametr}}"></input>
+  {% else %}
+  <input type="text" id="diametr_poliet_styki" name="svarshik1_diametr" class="form-control" style="width:100px;" value=""></input>
+  {% endif %}
+  <label for="kolvo_poliet_styki" style="margin-left:15px;width:120px;margin-top:5px;">Кол-во</label>
+  {% if context.object.svarshik1.kolvo %}
+  <input type="text" id="kolvo_poliet_styki" name="svarshik1_kolvo" class="form-control" style="width:70px;" value="{{context.object.svarshik1.kolvo}}"></input>
+  {% else %}
+  <input type="text" id="kolvo_poliet_styki" name="svarshik1_kolvo" class="form-control" style="width:70px;" value=""></input>
+  {% endif %}
+  <label for="date_polietilens" style="margin-left:15px;width:250px;">Дата сварки</label>
+  {% if context.object.svarshik1.date_svarki_html %}
+  <input type="date" id="date_polietilens" name="svarshik1_date_svarki" class="form-control" style="width:40%;margin-right:20px;" value="{{context.object.svarshik1.date_svarki_html}}"></input>
+  {% else %}
+  <input type="date" id="date_polietilens" name="svarshik1_date_svarki" class="form-control" style="width:40%;margin-right:20px;" value=""></input>
+  {% endif %}
+</div>
+</div>
+
+{% elif field_db == 'gazoprovod'%}
+<center>
+  <div class="" style="margin-top:10px">
+  <b>
+  <span style="margin-top:10px">Газопровод (ЭХЗ):</span>
+  </b>
+{% if field_value == True %}
+<input type="checkbox" class="form-control" id="nadzem_stal_truba_diametr" name="gazoprovod" style="margin-top:10px;width:150px;" checked>
+{% else %}
+<input type="checkbox" class="form-control" id="nadzem_stal_truba_diametr" name="gazoprovod" style="margin-top:10px;width:150px;">
+{% endif %}
+  </div>
+</center>
+
+{% elif field_db == 'prodavlivanie'%}
+<center>
+  <div class="" style="margin-top:10px">
+  <b>
+    <span>Продавливание:</span>
+  </b>
+{% if field_value == True %}
+<input type="checkbox" class="form-control" id="nadzem_stal_truba_diametr" name="prodavlivanie" style="margin-top:10px;width:150px;" checked>
+{% else %}
+<input type="checkbox" class="form-control" id="nadzem_stal_truba_diametr" name="prodavlivanie" style="margin-top:10px;width:150px;">
+{% endif %}
+</div>
+</center>
+
+{% elif field_db == 'certificates' %}
+<center>
+  <b>
+    <span>Сертификаты:</span>
+  </b>
+<div class="" style="margin:0 auto;display:block;">
+  <div class="border" style="border-color: #007BFF;">
+  <select id="select_cert" name="select_cert" class="form-control" multiple="multiple">
+  {% for certificate in context.certificates %}
+  {% if certificate in context.object.certificates.all %}
+   <option value="{{certificate.name}}" selected>{{certificate.name}}</option>
+  {% else %}
+   <option value="{{certificate.name}}">{{certificate.name}}</option>
+  {% endif %}
+  {% endfor %}
+  </select>
+  </div>
+</div>
+</center>
+
+{% elif field_db == 'gazoprovod_nadzem_stal' %}
+<div class="" style="margin-top:20px;">
+  <center>
+    <b>
+      <span>Надземный стальной газопровод:</span>
+    </b>
+  <div class="nadzem_stal_trubi" id="nadzem_stal_trubi" style="display:block;justify-content:center;margin-top:20px;">
+    {% for index, item in context.indexes_nadzem_stal.items %}
+    {% if index != 'itogo' %}
+    {% if index != 'object' %}
+    {% if index == 0 %}
+    <div class="nadzem_stal_truba" id="nadzem_stal_truba" style="display:flex;justify-content:center;margin-top:20px; margin-bottom:5px;">
+    {% else %}
+    <div class="nadzem_stal_truba" id="nadzem_stal_truba-{{index}}" style="display:flex;justify-content:center;margin-top:20px; margin-bottom:5px;">
+    {% endif %}
+    <span style="margin:5px 0 0 0;;min-width:170px;max-width:170px;">Труба стальная</span>
+    <span style="width:20px;margin-left:5px;margin-top:5px;">⌀</span>
+    {% if item.truba.diametr %}
+    <input type="text" class="form-control" id="nadzem_stal_truba_diametr" name="nadzem_stal_truba_diametr" style="width:100px;" value="{{item.truba.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stal_truba_diametr" name="nadzem_stal_truba_diametr" style="width:100px;" value=""></input>
+    {% endif %}
+    <span style="width:20px;margin-left:15px;margin-top:5px;">x</span>
+    {% if item.truba.x %}
+    <input type="text" class="form-control" id="nadzem_stal_truba_x" name="nadzem_stal_truba_x" style="width:100px;" value="{{item.truba.x}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stal_truba_x" name="nadzem_stal_truba_x" style="width:100px;" value=""></input>
+    {% endif %}
+    <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">Длина, м</span>
+    {% if item.truba.dlina %}
+    <input type="text" class="form-control" id="nadzem_stal_truba_dlina" name="nadzem_stal_truba_dlina" style="width:100px;" value="{{item.truba.dlina}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stal_truba_dlina" name="nadzem_stal_truba_dlina" style="width:100px;" value=""></input>
+    {% endif %}
+    {% if index == 0 %}
+    <input type="button" value="+" onclick="createNewNadzemStalTruba_view();" style="width:30px;height:30px;margin:4px 0 0 20px;">
+    {% else %}
+    <input type="button" value="-" onclick="delete_tr_stal('nadzem_stal_truba-{{index}}');" style="width:30px;height:30px;margin:4px 0 0 20px;" id="button_minus">
+    {% endif %}
+    </div>
+    </div>
+    </div>
+    {% else %}
+      <center><b>Установлено:</b></center>
+
+    <div class="123" style="display:flex;justify-content:center;">
+    <ul>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;justify-content:center;">
+    <span>Изолирующие соединения</span>
+    <span style="margin-left:2%;margin-top:5px;margin-right:5px;">⌀</span>
+    {% if item.izolir_soed.diametr %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_izolir_soed" name='nadzem_stal_izolir_soed' style="width:100px;" value="{{item.izolir_soed.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_izolir_soed" name='nadzem_stal_izolir_soed' style="width:100px;" value=""></input>
+    {% endif %}
+    {% if item.izolir_soed.kolvo %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_izolir_kolvo" name='nadzem_stal_izolir_kolvo' style="width:100px;margin-left:60px;" value="{{item.izolir_soed.kolvo}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_izolir_kolvo" name='nadzem_stal_izolir_kolvo' style="width:100px;margin-left:60px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:2%; margin-top:5px;margin-right:5px;">шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;justify-content:center;">
+    <span>Кран стальной</span>
+    <span style="margin-left:2%;margin-top:5px;margin-right:5px;">⌀</span>
+    {% if item.kran_stal.diametr %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_kran_diametr" name='nadzem_stal_kran_diametr' style="width:100px;" value="{{item.kran_stal.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_kran_diametr" name='nadzem_stal_kran_diametr' style="width:100px;" value=""></input>
+    {% endif %}
+    {% if item.kran_stal.kolvo %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_kran_kolvo" name="nadzem_stal_kran_kolvo" style="margin-left:5%;width:100px;" value="{{item.kran_stal.kolvo}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_kran_kolvo" name="nadzem_stal_kran_kolvo" style="margin-left:5%;width:100px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:2%; margin-top:5px;margin-right:5px;">шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;justify-content:center;">
+    <span>Отвод</span>
+    <span style="margin-left:2%;margin-top:5px;margin-right:5px;">⌀</span>
+    {% if item.otvod.diametr %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_otvod_diametr" name='nadzem_stal_otvod_diametr' style="width:100px;" value="{{item.otvod.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_otvod_diametr" name='nadzem_stal_otvod_diametr' style="width:100px;" value=""></input>
+    {% endif %}
+    {% if item.otvod.kolvo %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_otvod_kolvo" name='nadzem_stal_otvod_kolvo' style="margin-left:5%;width:100px;" value="{{item.otvod.kolvo}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_otvod_kolvo" name='nadzem_stal_otvod_kolvo' style="margin-left:5%;width:100px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:2%; margin-top:5px;">шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;justify-content:center;">
+    <span>Цокольный ввод</span>
+    <span style="margin-left:2%;margin-top:5px;margin-right:5px;min-width:40px;">ПЭ ⌀</span>
+    {% if item.cokolnyi_vvod.PE %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_PE" name="nadzem_stal_cokol_vvod_PE" style="width:100px;" value="{{item.cokolnyi_vvod.PE}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_PE" name="nadzem_stal_cokol_vvod_PE" style="width:100px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:1%;margin-top:5px;margin-right:5px;min-width:50px;">/СТ ⌀</span>
+    {% if item.cokolnyi_vvod.ST %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_ST" name="nadzem_stal_cokol_vvod_ST" style="width:100px;" value="{{item.cokolnyi_vvod.ST}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_ST" name="nadzem_stal_cokol_vvod_ST" style="width:100px;" value=""></input>
+    {% endif %}
+    {% if item.cokolnyi_vvod.kolvo %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_kolvo" name='nadzem_stal_cokol_vvod_kolvo' style="margin-left:5%;width:100px;" value="{{item.cokolnyi_vvod.kolvo}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_kolvo" name='nadzem_stal_cokol_vvod_kolvo' style="margin-left:5%;width:100px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:2%; margin-top:5px;">шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;justify-content:center;">
+    <span>Крепление газопровода к кирпичной стене</span>
+    {% if item.kreplenie %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_kreplenie" name="nadzem_stal_kreplenie" style="margin-left:10%;width:100px;" value="{{item.kreplenie}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_kreplenie" name="nadzem_stal_kreplenie" style="margin-left:10%;width:100px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:2%; margin-top:5px;">шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;justify-content:center;">
+    <span style="width:350px">Стойка под газопровод</span>
+    <span style="width:30px;margin-left:2%; margin-top:5px;">⌀</span>
+    {% if item.stoika.diametr %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_stoika_diametr" name="nadzem_stalnoi_stoika_diametr" style="width:100px;" value="{{item.stoika.diametr}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_stoika_diametr" name="nadzem_stalnoi_stoika_diametr" style="width:100px;" value=""></input>
+    {% endif %}
+    <span style="width:150px;margin-left:5%; margin-top:5px;">Длина, м</span>
+    {% if item.stoika.dlina %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_stoika_dlina" name="nadzem_stalnoi_stoika_dlina" style="width:100px;" value="{{item.stoika.dlina}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="nadzem_stalnoi_stoika_dlina" name="nadzem_stalnoi_stoika_dlina" style="width:100px;" value=""></input>
+    {% endif %}
+    {% if item.stoika.kolvo %}
+    <input type="text" class="form-control" id="stoika" name="nadzem_stalnoi_stoika_kolvo" style="margin-left:10%;width:100px;" value="{{item.stoika.kolvo}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="stoika" name="nadzem_stalnoi_stoika_kolvo" style="margin-left:10%;width:100px;" value=""></input>
+    {% endif %}
+    <span style="margin-left:2%; margin-top:5px;">шт</span>
+    </div>
+    </li>
+    </ul>
+    </div>
+    </div>
+
+{% endif %}
+{% endif %}
+{% endfor %}
+
+
+{% elif field_db == 'gazoprovod_podzem_poliet' %}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+<span>Подземный полиэтиленовый газопровод:</span>
+</b>
+<div class="polietilen_gazoprovod" style="margin:1%;display:block;justify-content:center;">
+<div class="poliet_trubi" id="poliet_trubi" style="display:block;justify-content:center;">
+{% for index, item in context.indexes_podzem_poliet.items %}
+{% if index != 'itogo' %}
+{% if index != 'object' %}
+{% if index == 0 %}
+<div class="poliet_truba" id="poliet_truba" style="display:flex;justify-content:center;margin-top:20px;">
+{% else %}
+<div class="poliet_truba" id="poliet_truba-{{index}}" style="display:flex;justify-content:center;margin-top:20px;">
+{% endif %}
+  <span style= "margin-top:5px;min-width:170px;max-width:170px">Труба ПЭ100 SDR11</span>
+  <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+  {% if item.truba.diametr %}
+  <input type="text" class="form-control" id="truba" name="poliet_truba_diametr" style="width:60px;" value="{{item.truba.diametr}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="truba" name="poliet_truba_diametr" style="width:60px;" value=""></input>
+  {% endif %}
+  <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+  {% if item.truba.x %}
+  <input type="text" class="form-control" id="truba" name="poliet_truba_kolvo" style="width:60px;" value="{{item.truba.x}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="truba" name="poliet_truba_kolvo" style="width:60px;" value=""></input>
+  {% endif %}
+  <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">Длина, м</span>
+  {% if item.truba.dlina %}
+  <input type="text" class="form-control" id="dlina_truba" name="poliet_truba_dlina" style="width:100px;" value="{{item.truba.dlina}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="dlina_truba" name="poliet_truba_dlina" style="width:100px;" value=""></input>
+  {% endif %}
+
+  <span style= "min-width:320px;max-width:320px; margin-left:70px;margin-top:5px;">Муфта электросварная ПЭ100 SDR11</span>
+  <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+  {% if item.mufta.diametr %}
+  <input type="text" class="form-control" id="truba" name="poliet_mufta_diametr" style="width:60px;" value="{{item.mufta.diametr}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="truba" name="poliet_mufta_diametr" style="width:60px;" value=""></input>
+  {% endif %}
+  <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+  {% if item.mufta.x %}
+  <input type="text" class="form-control" id="truba" name="poliet_mufta_kolvo" style="width:60px;" value="{{item.mufta.x}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="truba" name="poliet_mufta_kolvo" style="width:60px;" value=""></input>
+  {% endif %}
+  {% if item.mufta.dlina %}
+  <input type="text" class="form-control" id="dlina_mufta" name="poliet_mufta_dlina" style="width:100px;margin-left:15px;" value="{{item.mufta.dlina}}"></input>
+  {% else %}
+  <input type="text" class="form-control" id="dlina_mufta" name="poliet_mufta_dlina" style="width:100px;margin-left:15px;" value=""></input>
+  {% endif %}
+  <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">шт</span>
+  {% if index == 0 %}
+  <input type="button" value="+" onclick="createNewTruba_view();" style="width:30px;height:30px;margin:4px 0 0 20px;">
+  {% else %}
+  <input type="button" value="-" onclick="delete_tr_stal('poliet_truba-{{index}}');" style="width:30px;height:30px;margin:4px 0 0 20px;" id="button_minus">
+  {% endif %}
+</div>
+</div>
+{% else %}
+
+<div class="ustanovl" style="display:block;justify-content:center;margin-left:80px;margin-top:30px;">
+  <center><span style="text-align:center"><b>Установлено:</b></span></center>
+  <div class="elements" style="display:block;justify-content:center;">
+    <div class="truba_" style="display:flex;justify-content:center;margin-top:5px;">
+      <ul>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:150px;margin-top:4px;">Отвод ПЭ100 SDR11</span>
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.otvod.diametr %}
+          <input type="text" class="form-control" id="truba" name="poliet_otvod_diametr" style="width:100px;" value="{{item.otvod.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="poliet_otvod_diametr" style="width:100px;" value=""></input>
+          {% endif %}
+          {% if item.otvod.kolvo %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_otvod_dlina" style="margin-left:20px;width:100px;" value="{{item.otvod.kolvo}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_otvod_dlina" style="margin-left:20px;width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:100px;margin-left:10px; margin-top:5px;">шт</span>
+        </div>
+        </li>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:300px;margin-top:4px;">Тройник электросварный ПЭ100 SDR11</span>
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.troinik.diametr1 %}
+          <input type="text" class="form-control" id="truba" name="poliet_troinik1" style="width:100px;"  value="{{item.troinik.diametr1}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="poliet_troinik1" style="width:100px;"  value=""></input>
+          {% endif %}
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.troinik.diametr2 %}
+          <input type="text" class="form-control" id="truba" name="poliet_troinik2" style="width:100px;" value="{{item.troinik.diametr2}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="poliet_troinik2" style="width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.troinik.diametr3 %}
+          <input type="text" class="form-control" id="truba" name="poliet_troinik3" style="width:100px;" value="{{item.troinik.diametr3}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="poliet_troinik3" style="width:100px;" value=""></input>
+          {% endif %}
+          {% if item.troinik.kolvo %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_troinik_dlina" style="width:100px;margin-left:20px;" value="{{item.troinik.kolvo}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_troinik_dlina" style="width:100px;margin-left:20px;" value=""></input>
+          {% endif %}
+          <span style="width:140px;margin-left:10px; margin-top:5px;">шт</span>
+          </div>
+        </li>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:300px;margin-top:4px;">Заглушка электросварная ПЭ100 SDR11</span>
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.zaglushka.diametr %}
+          <input type="text" class="form-control" id="truba" name="poliet_zaglushka_diametr" style="width:100px;" value="{{item.zaglushka.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="poliet_zaglushka_diametr" style="width:100px;" value=""></input>
+          {% endif %}
+          {% if item.zaglushka.kolvo %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_zaglushka_dlina" style="margin-left:20px;width:100px;" value="{{item.zaglushka.kolvo}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_zaglushka_dlina" style="margin-left:20px;width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+          </div>
+        </li>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:300px;margin-top:4px;">Лента сигнальная "Осторожно! ГАЗ!"</span>
+          {% if item.lenta %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_lenta_signal_dlina" style="margin-left:20px;width:100px;" value="{{item.lenta}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_lenta_signal_dlina" style="margin-left:20px;width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+          </div>
+        </li>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:400px;margin-top:4px;">Кран шаровой для подземной установки ПЭ 100 ГАЗ SDR11</span>
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.kran.diametr %}
+          <input type="text" class="form-control" id="truba" name="poliet_kran_shar_diametr" style="width:100px;" value="{{item.kran.diametr}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="poliet_kran_shar_diametr" style="width:100px;" value=""></input>
+          {% endif %}
+          {% if item.kran.kolvo %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_kran_shar_dlina" style="margin-left:20px;width:100px;" value="{{item.kran.kolvo}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_kran_shar_dlina" style="margin-left:20px;width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+          </div>
+        </li>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:200px;margin-top:4px;">Опознавательный знак</span>
+          {% if item.znak %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_opoznavat_znak_kolvo" style="width:100px;" value="{{item.znak}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="dlina_truba_" name="poliet_opoznavat_znak_kolvo" style="width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:80px;margin-left:2%; margin-top:5px;"> шт</span>
+          </div>
+        </li>
+        <li>
+          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+          <span style= "width:200px;margin-top:4px;">Седелка электросварная</span>
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.sedelka.diametr1 %}
+          <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik1" style="width:100px;" value="{{item.sedelka.diametr1}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik1" style="width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.sedelka.diametr2 %}
+          <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik2" style="width:100px;" value="{{item.sedelka.diametr2}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik2" style="width:100px;" value=""></input>
+          {% endif %}
+          <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+          {% if item.sedelka.diametr3 %}
+          <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik3" style="width:100px;" value="{{item.sedelka.diametr3}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik3" style="width:100px;" value=""></input>
+          {% endif %}
+          {% if item.sedelka.kolvo %}
+          <input type="text" class="form-control" id="sedelka_poliet_kolvo" name="sedelka_poliet_kolvo" style="width:100px;margin-left:50px" value="{{item.sedelka.kolvo}}"></input>
+          {% else %}
+          <input type="text" class="form-control" id="sedelka_poliet_kolvo" name="sedelka_poliet_kolvo" style="width:100px;margin-left:50px" value=""></input>
+          {% endif %}
+          <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+</div>
+
+
+{% elif field_db == 'gazoprovod_podzem_stal' %}
+<div class="" style="margin-top:20px;">
+<center>
+<b>
+  <span>Подземный стальной газопровод:</span>
+</b>
+<div class="podzem_stal_trubi" id="podzem_stal_trubi" style="margin-top:20px">
+{% for index, truba in context.indexes_podzem_stal.items %}
+{% if index != 'itogo' %}
+{% if index != 'object' %}
+{% if index == 0 %}
+<div class="podzem_stal_truba" id="podzem_stal_truba" style="display:flex;justify-content:space-around;margin:10px 0 0 0">
+{% else %}
+<div class="podzem_stal_truba" id="podzem_stal_truba-{{index}}" style="display:flex;justify-content:space-around;margin:10px 0 0 0">
+{% endif %}
+<span style= "margin-top:5px;min-width:50px;max-width:50px;">Труба </span>
+<span style="min-width:5px;max-width:5px; margin:5px;">⌀</span>
+{% if truba.truba.diametr %}
+<input type="text" class="form-control" id="truba" name="stalnoi_truba_diametr" style="width:100px;margin-left:10px;" value="{{truba.truba.diametr}}"></input>
+{% else %}
+<input type="text" class="form-control" id="truba" name="stalnoi_truba_diametr" style="width:100px;margin-left:10px;" value=""></input>
+{% endif %}
+<span style="min-width:5px;max-width:5px; margin:5px 5px 5px 10px;">x</span>
+{% if truba.truba.x %}
+<input type="text" class="form-control" id="truba" name="stalnoi_truba_kolvo" style="width:80px;margin-left:10px;" value="{{truba.truba.x}}"></input>
+{% else %}
+<input type="text" class="form-control" id="truba" name="stalnoi_truba_kolvo" style="width:80px;margin-left:10px;" value=""></input>
+{% endif %}
+<span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">Длина, м</span>
+{% if truba.truba.dlina %}
+<input type="text" class="form-control" id="stalnoi_truba_dlina" name="stalnoi_truba_dlina" style="width:200px;margin-left:5px;" value="{{truba.truba.dlina}}"></input>
+{% else %}
+<input type="text" class="form-control" id="stalnoi_truba_dlina" name="stalnoi_truba_dlina" style="width:200px;margin-left:5px;" value=""></input>
+{% endif %}
+<span style="width:100px;margin:5px 0 0 15px;">Примечание:</span>
+{% if truba.truba.prim %}
+<input type="text" class="form-control" id="prim_truba" name="stalnoi_truba_prim" style="width:260px;" value="{{truba.truba.prim}}"></input>
+{% else %}
+<input type="text" class="form-control" id="prim_truba" name="stalnoi_truba_prim" style="width:260px;" value=""></input>
+{% endif %}
+{% if index == 0 %}
+<input type="button" value="+" onclick="createNewStalTruba_view();" style="width:30px;height:30px;margin:5px 10px 0 15px;" id="button_plus">
+{% else %}
+<input type="button" value="-" onclick="delete_tr_stal('podzem_stal_truba-{{index}}');" style="width:30px;height:30px;margin:5px 10px 0 15px;" id="button_minus">
+{% endif %}
+</div>
+</div>
+  {% else %}
+
+<div class="ustanovl" style="display:block;margin-top:10px;">
+<center><span style="text-align:center"><b>Установлено:</b></span></center>
+<div class="elements" style="display:block;width:100%">
+<div class="truba_" style="display:flex;margin-top:5px;justify-content:center;">
+  <ul>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;">
+    <span style="width:140px;">Неразъёмное соединение:</span>
+    <span style="width:30px;margin: 5px 0px 0px 10px;">ПЭ ⌀</span>
+    {% if truba.neraz_soed.PE %}
+    <input type="text" class="form-control" id="neraz_soed_diam" name="stalnoi_neraz_soed_PE" style="width:70px;" value="{{truba.neraz_soed.PE}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="neraz_soed_diam" name="stalnoi_neraz_soed_PE" style="width:70px;" value=""></input>
+    {% endif %}
+    <span style="width:30px;margin: 5px 0px 0px 10px;">/СТ ⌀</span>
+    {% if truba.neraz_soed.ST %}
+    <input type="text" class="form-control" id="neraz_soed_diam" name="stalnoi_neraz_soed_ST" style="width:70px;" value="{{truba.neraz_soed.ST}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="neraz_soed_diam" name="stalnoi_neraz_soed_ST" style="width:70px;" value=""></input>
+    {% endif %}
+    {% if truba.neraz_soed.kolvo %}
+    <input type="text" class="form-control" id="neraz_soed_kolvo" name="neraz_soed_kolvo" style="width:100px;margin-left:20px;" value="{{truba.neraz_soed.kolvo}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="neraz_soed_kolvo" name="neraz_soed_kolvo" style="width:100px;margin-left:20px;" value=""></input>
+    {% endif %}
+    <span style="width:30px; margin-left:20px;margin-top:5px;">шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;">
+    <span style="margin-top:5px">Контрольная трубка:</span>
+    {% if truba.kontrolnaya_trubka %}
+    <input type="text" class="form-control" id="kontrolnaya_trunka" name="stalnoi_kontrolnaya_trubka" style="width:100px;margin-left:20px;" value="{{truba.kontrolnaya_trubka}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="kontrolnaya_trunka" name="stalnoi_kontrolnaya_trubka" style="width:100px;margin-left:20px;" value=""></input>
+    {% endif %}
+    <span style="width:150px; margin-left:20px;margin-top:5px"> шт</span>
+    </div>
+    </li>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;">
+    <span style="margin-top:5px">Отвод ст. 90 гр.:</span>
+    {% if truba.otvod_90 %}
+    <input type="text" class="form-control" id="kontrolnaya_trunka" name="stalnoi_otvod" style="width:100px;margin-left:20px;" value="{{truba.otvod_90}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="kontrolnaya_trunka" name="stalnoi_otvod" style="width:100px;margin-left:20px;" value=""></input>
+    {% endif %}
+    <span style="width:150px; margin-left:20px;margin-top:5px"> шт</span>
+    </div>
+    <li>
+    <div class="neraz_soed" style="display:flex;margin-top:20px;">
+    <span style="margin-top:5px">Опознавательный знак:</span>
+    {% if truba.opoznavat_znak %}
+    <input type="text" class="form-control" id="stal_opoznavat_znak" name="stal_opoznavat_znak" style="width:100px;margin-left:20px;" value="{{truba.opoznavat_znak}}"></input>
+    {% else %}
+    <input type="text" class="form-control" id="stal_opoznavat_znak" name="stal_opoznavat_znak" style="width:100px;margin-left:20px;" value=""></input>
+    {% endif %}
+    <span style="width:150px; margin-left:20px;margin-top:5px"> шт</span>
+    </div>
+    </li>
+  </ul>
+</div>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}
+</div>
+
+{% elif field_db == 'ks2' %}
+<div class="" style="margin-top:20px;">
+<center>
+<b>
+  <span>Подписанты КС 2 и КС 3 (+ объект, стройка):</span>
+</b>
+<div class="" style="margin-left:10px;margin-top:25px">
+<div class="" style="display:flex;margin-top:30px;margin-right:5px;">
+<h6 style="margin-top:5px;width:120px;">Заказчик:</h6>
+<label for="ks2_zakazchik_post" style="margin-top:5px;margin-right:5px;">Должность</label>
+{% if context.object.ks2_zakazchik.post %}
+<input type="text" class="form-control" id="ks2_zakazchik_post" name="ks2_zakazchik_post" style="width:75%;font-size:13;" value="{{context.object.ks2_zakazchik.post}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks2_zakazchik_post" name="ks2_zakazchik_post" style="width:75%;font-size:13;" value=""></input>
+{% endif %}
+<label for="ks2_zakazchik_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+{% if context.object.ks2_zakazchik.fio %}
+<input type="text" class="form-control" id="ks2_zakazchik_fio" name="ks2_zakazchik_fio" style="width:20%;" value="{{context.object.ks2_zakazchik.fio}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks2_zakazchik_fio" name="ks2_zakazchik_fio" style="width:20%;" value=""></input>
+{% endif %}
+</div>
+
+<div class="" style="display:flex;margin-top:30px;margin-right:5px;">
+<h6 style="margin-top:5px;width:120px;">Подрядчик:</h6>
+<label for="ks2_podryadchik_post" style="margin-top:5px;margin-right:5px;">Должность</label>
+{% if context.object.ks2_podryadchik.post %}
+<input type="text" class="form-control" id="ks2_podryadchik_post" name="ks2_podryadchik_post" style="width:75%;font-size:13;" value="{{context.object.ks2_podryadchik.post}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks2_podryadchik_post" name="ks2_podryadchik_post" style="width:75%;font-size:13;" value=""></input>
+{% endif %}
+<label for="ks2_podryadchik_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+{% if context.object.ks2_podryadchik.fio %}
+<input type="text" class="form-control" id="ks2_podryadchik_fio" name="ks2_podryadchik_fio" style="width:20%;" value="{{context.object.ks2_podryadchik.fio}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks2_podryadchik_fio" name="ks2_podryadchik_fio" style="width:20%;" value=""></input>
+{% endif %}
+</div>
+
+<div class="" style="display:flex;margin-top:30px;margin-right:5px;">
+<label for="ks2_podryadchik_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Объект</label>
+{% if context.object.ks2_object %}
+<input type="text" class="form-control" id="ks2_podryadchik_post" name="object" style="width:40%" value="{{context.object.ks2_object}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks2_podryadchik_post" name="object" style="width:40%" value=""></input>
+{% endif %}
+<label for="ks2_podryadchik_fio" style="margin-left:50px;margin-top:5px;margin-right:5px;">Стройка</label>
+{% if context.object.ks2_stroika %}
+<input type="text" class="form-control" id="ks2_podryadchik_fio" name="stroika" style="width:40%;" value="{{context.object.ks2_stroika}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks2_podryadchik_fio" name="stroika" style="width:40%;" value=""></input>
+{% endif %}
+</div>
+</div>
+</div>
+
+{% elif field_db == 'ks11' %}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Подписанты КС 11 и КС 14:</span>
+  </b>
+<div class="" style="margin-left:10px;margin-top:35px">
+<div class="" style="display:flex;margin-top:30px;">
+<h6 style="width:170px;">Председатель комиссии:</h6>
+<label for="ks11_predsedatel_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+{% if context.object.ks11_predsedatel.post %}
+<input type="text" class="form-control" id="ks11_predsedatel_post" name="ks11_predsedatel_post" style="width:75%;font-size:13;" value="{{context.object.ks11_predsedatel.post}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predsedatel_post" name="ks11_predsedatel_post" style="width:75%;font-size:13;" value=""></input>
+{% endif %}
+<label for="ks11_predsedatel_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+{% if context.object.ks11_predsedatel.fio %}
+<input type="text" class="form-control" id="ks11_predsedatel_fio" name="ks11_predsedatel_fio" style="width:20%;" value="{{context.object.ks11_predsedatel.fio}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predsedatel_fio" name="ks11_predsedatel_fio" style="width:20%;" value=""></input>
+{% endif %}
+</div>
+
+<div class="" style="display:flex;margin-top:30px;">
+<h6 style="width:170px;">Представитель проектной организации:</h6>
+<label for="ks11_predstav_proekt_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+{% if context.object.ks11_predstav_proekt.post %}
+<input type="text" class="form-control" id="ks11_predstav_proekt_post" name="ks11_predstav_proekt_post" style="width:75%;font-size:13;" value="{{context.object.ks11_predstav_proekt.post}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predstav_proekt_post" name="ks11_predstav_proekt_post" style="width:75%;font-size:13;" value=""></input>
+{% endif %}
+<label for="ks11_predstav_proekt_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+{% if context.object.ks11_predstav_proekt.fio %}
+<input type="text" class="form-control" id="ks11_predstav_proekt_fio" name="ks11_predstav_proekt_fio" style="width:20%;" value="{{context.object.ks11_predstav_proekt.fio}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predstav_proekt_fio" name="ks11_predstav_proekt_fio" style="width:20%;" value=""></input>
+{% endif %}
+</div>
+
+<div class="" style="display:flex;margin-top:30px;">
+<h6 style="width:170px;">Представитель эксплуатирующей организации:</h6>
+<label for="ks11_predstav_ekspl_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+{% if context.object.ks11_predstav_ekspl.post %}
+<input type="text" class="form-control" id="ks11_predstav_ekspl_post" name="ks11_predstav_ekspl_post" style="width:75%;font-size:13;" value="{{context.object.ks11_predstav_ekspl.post}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predstav_ekspl_post" name="ks11_predstav_ekspl_post" style="width:75%;font-size:13;" value=""></input>
+{% endif %}
+<label for="ks11_predstav_ekspl_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+{% if context.object.ks11_predstav_ekspl.fio %}
+<input type="text" class="form-control" id="ks11_predstav_ekspl_fio" name="ks11_predstav_ekspl_fio" style="width:20%;" value="{{context.object.ks11_predstav_ekspl.fio}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predstav_ekspl_fio" name="ks11_predstav_ekspl_fio" style="width:20%;" value=""></input>
+{% endif %}
+</div>
+
+<div class="" style="display:flex;margin-top:10px;">
+<h6 style="width:170px;">Представитель генерального подрядчика:</h6>
+<label for="ks11_predstav_podryadchika_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+{% if context.object.kontragent.podpisant.post %}
+<input type="text" class="form-control" id="ks11_predstav_podryadchika_post" name="ks11_predstav_podryadchika_post" style="width:75%;font-size:13;" value="{{context.object.kontragent.podpisant.post}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predstav_podryadchika_post" name="ks11_predstav_podryadchika_post" style="width:75%;font-size:13;" value=""></input>
+{% endif %}
+<label for="ks11_predstav_podryadchika_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+{% if context.object.kontragent.podpisant.fio %}
+<input type="text" class="form-control" id="ks11_predstav_podryadchika_fio" name="ks11_predstav_podryadchika_fio" style="width:20%;" value="{{context.object.kontragent.podpisant.fio}}"></input>
+{% else %}
+<input type="text" class="form-control" id="ks11_predstav_podryadchika_fio" name="ks11_predstav_podryadchika_fio" style="width:20%;" value=""></input>
+{% endif %}
+</div>
+</div>
+</div>
+
+{% elif field_db == 'gip' %}
+
+<div class="GIP_raion_kod_zayavitel" style="display:flex;justify-content:center;margin:10px 0 20px 0;">
+    <div class="GIP" style="">
+      <b>
+        <label for="custom_GIP">ГИП: </label>
+      </b>
+      {% if context.object.gip.fio %}
+        <b><input type="text" class="form-control" id="custom_GIP" name="custom_GIP" style="width:300px" value="{{context.object.gip.fio}}"></input></b>
+        {% else %}
+        <b><input type="text" class="form-control" id="custom_GIP" name="custom_GIP" style="width:300px" value=""></input></b>
+        {% endif %}
+        </div>
+        <div class="form-group" style="margin:0 0 0 20px">
+          <b>
+            <label for="organization">Организация: </label>
+          </b>
+          {% if context.object.gip.organization %}
+          <b><input type="text" class="form-control"  id="organization" name="organization" style="width:600px;text-align:center;font-size:13;" value="{{context.object.gip.organization}}"></input></b>
+          {% else %}
+          <b><input type="text" class="form-control"  id="organization" name="organization" style="width:600px;text-align:center;font-size:13;" value=""></input></b>
+          {% endif %}
+        </div>
+        </div>
+
+
+{% elif field_db == 'kontragent' %}
+<div class="" style="margin-top:20px;">
+<center>
+  <b>
+    <span>Контрагент:</span>
+  </b>
+<div class="" style='display:block;'>
+<div class="name_and_zakazchik" style="display:flex;justify-content:space-around;margin-top:20px;">
+  <div class="form-group" style="width:35%;">
+    <label for="name_kontragent">Название: </label>
+    {% if context.object.kontragent.name_kontragent %}
+    <b><input type="text" class="form-control"  id="name_kontragent" name="name_kontragent" value="{{context.object.kontragent.name_kontragent}}"></input></b>
+    {% else %}
+    <b><input type="text" class="form-control"  id="name_kontragent" name="name_kontragent" value=""></input></b>
+    {% endif %}
+  </div>
+  <div class="form-group" style="width:15%;">
+    <label for="INN">ИНН: </label>
+    {% if context.object.kontragent.INN %}
+    <b><input type="text" class="form-control"  id="INN" name="INN" value="{{context.object.kontragent.INN}}"></input></b>
+    {% else %}
+    <b><input type="text" class="form-control"  id="INN" name="INN" value=""></input></b>
+    {% endif %}
+  </div>
+  <div class="form-group" style="width:15%;">
+    <label for="KPP">КПП: </label>
+    {% if context.object.kontragent.KPP %}
+    <b><input type="text" class="form-control"  id="KPP" name="KPP" value="{{context.object.kontragent.KPP}}"></input></b>
+    {% else %}
+    <b><input type="text" class="form-control"  id="KPP" name="KPP" value=""></input></b>
+    {% endif %}
+  </div>
+  </div>
+</div>
+  <div class="1" style="display:flex;justify-content:space-around;margin-top:20px;">
+  <div class="form-group" style="width:45%;">
+    <label for="Ur_address">Юридический адрес: </label>
+    {% if context.object.kontragent.Ur_address %}
+    <b><input type="text" class="form-control"  id="Ur_address" name="Ur_address" value="{{context.object.kontragent.Ur_address}}"></input></b>
+    {% else %}
+    <b><input type="text" class="form-control"  id="Ur_address" name="Ur_address" value=""></input></b>
+    {% endif %}
+  </div>
+  <div class="telephone" style="width:25%;">
+      <label for="telephone">Номер телефона: </label>
+      {% if context.object.kontragent.telephone %}
+      <b><input type="text" class="form-control"  id="telephone" name="telephone" value="{{context.object.kontragent.telephone}}"></input></b>
+      {% else %}
+      <b><input type="text" class="form-control"  id="telephone" name="telephone" value=""></input></b>
+      {% endif %}
+    </div>
+    <div class="podpisant" style="width:25%;">
+        <label for="podpisant">Представитель генерального подрядчика (ФИО): </label>
+        {% if context.object.kontragent.podpisant.fio %}
+        <b><input type="text" class="form-control"  id="podpisant" name="podpisant" value="{{context.object.kontragent.podpisant.fio}}"></input></b>
+        {% else %}
+        <b><input type="text" class="form-control"  id="podpisant" name="podpisant"></input></b>
+        {% endif %}
+      </div>
+    </div>
+    </div>
+
+{% else %}
+  <div class="name_and_zakazchik" style="display:flex;justify-content:center;align-items:center">
+    <div class="form-group" style="margin-right:30px;">
+      <b>
+        <span>{{field_name}}:</span>
+      </b>
+    </div>
+    <div class="form-group" style="width:60%">
+      {% if field_db in context.fields_dates.keys %}
+      <input type="date" class="form-control"  id="{{field_db}}" name="{{field_db}}" value="{{field_value}}"</input>
+      {% else %}
+        {% if field_value %}
+        <input type="text" class="form-control"  id="{{field_db}}" name="{{field_db}}" value="{{field_value}}"</input>
+        {% else %}
+        <input type="text" class="form-control"  id="{{field_db}}" name="{{field_db}}" value=""</input>
+        {% endif %}
+      {% endif %}
+
+    </div>
+    </div>
+
+    {% endif %}
+    {% endfor %}
+  {% if selected %}
+  <center>
+  <button class="btn btn-primary" style="background: #94b8d6;color:rgba(0,0,0,.5);margin-top:20px;width:80%;height:40px;" type="submit"><b>Изменить</b></button>
+  {% endif %}
+
+</form>
+
+{% endblock %}

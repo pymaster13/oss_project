@@ -1,0 +1,786 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if context.success %}
+<div class="alert-reg">
+<div class="alert alert-success" role="alert">
+  {{context.success}}
+</div>
+</div>
+{% endif %}
+{% if context.error %}
+<div class="alert-reg">
+<div class="alert alert-danger" role="alert">
+  {{context.error}}
+</div>
+</div>
+{% endif %}
+<form action="" method="post" name="first_form">
+  {% csrf_token %}
+  <h2 style='text-align: center; margin:10px;'>Новый объект</h2>
+  <div class="name_and_zakazchik" style="display:flex;justify-content:space-around;margin:20px 0px 15px 0px;">
+    <div class="form-group" style="width:40%;">
+      <label for="name_object"><b>Название объекта</b></label>
+      <input type="text" class="form-control" id="name_object" name="name_object">
+    </div>
+    <div class="form-group" style="width:55%;">
+      <label for="zakazchik"><b>Заказчик</b></label>
+      <input type="text" class="form-control" id="zakazchik" name="zakazchik" value="ПАО Газпром газораспределение Нижний Новгород">
+    </div>
+  </div>
+
+  <div class="name_and_zakazchik" style="display:flex;justify-content:space-around;margin:0 0px 15px 0px;">
+    <div class="form-group" style="width:40%;">
+      <label for="place"><b>Местоположение</b></label>
+      <input type="text" class="form-control" id="place" name="place">
+    </div>
+  <div class="kod_obj" style="width:55%;">
+      <label for="kod_object"><b>Код объекта</b></label>
+      <input type="text" class="form-control" id="kod_object" name="kod_object"">
+    </div>
+    </div>
+
+        <div class="name_and_zakazchik" style="display:flex;justify-content:space-around;margin:0 0px 15px 0px;">
+            <label for="select_raion" style="margin:7px 10px 0 10px;"><b>Район</b></label>
+            <div class="border" style="border-color: #007BFF;min-width:300px;margin:0 20px 0 20px;">
+            <select id="select_raion" name="select_raion" class="form-control" onchange="select_tehn(this)" style="">
+              <option>Выберите район</option>
+            {% for raion in context.raions %}
+            {% if raion %}
+             <option value="{{raion}}"">{{raion}}</option>
+            {% endif %}
+            {% endfor %}
+            </select>
+            </div>
+            <input type="text" id="select_raion_custom" name="select_raion_custom" class="form-control" placeholder="Ввести район вручную...">
+                <label for="zayv" style="margin:5px 20px 0 50px;"><b>Заявитель</b></label>
+                <input type="text" class="form-control" id="zayv" name="zayv">
+              </div>
+
+    <hr>
+    <h5 style='text-align:center; margin-bottom:5px;'>Контрагент</h5>
+    <div class=""><center>
+      <div class="border" style="border-color: #007BFF; width:60%;">
+      <select id="select_kontragent" name="select_kontragent" class="form-control" onchange="select_kontragent_(this)" style="width:400px;margin-top:10px;">
+        <option>Выберите контрагента</option>
+      {% for kontragent in context.kontragents %}
+      {% if kontragent.name_kontragent %}
+       <option value="{{kontragent.name_kontragent}}"">{{kontragent.name_kontragent}}</option>
+      {% endif %}
+      {% endfor %}
+      </select>
+  </div>
+  </div>
+    <div class="name_and_zakazchik" style="display:flex;justify-content:space-around;margin-top:20px;">
+      <div class="form-group" style="width:35%;">
+        <label for="name_kontragent"><b>Название</b></label>
+        <input type="text" class="form-control" id="name_kontragent" name="name_kontragent">
+      </div>
+      <div class="form-group" style="width:15%;">
+        <label for="INN"><b>ИНН</b></label>
+        <input type="text" class="form-control" id="INN" name="INN">
+      </div>
+      <div class="form-group" style="width:15%;">
+        <label for="KPP"><b>КПП</b></label>
+        <input type="text" class="form-control" id="KPP" name="KPP">
+      </div>
+    </div>
+      <div class="name_and_zakazchik" style="display:flex;justify-content:space-around;margin-top:5px;">
+      <div class="form-group" style="width:52%;">
+        <label for="Ur_address"><b>Юридический адрес</b></label>
+        <input type="text" class="form-control" id="Ur_address" name="Ur_address">
+      </div>
+      <div class="telephone" style="width:25%;">
+          <label for="telephone"><b>Номер телефона</b></label>
+          <input type="text" class="form-control" id="telephone" name="telephone">
+        </div>
+        </div>
+    <hr>
+
+    <div class="razmeshenie_i_proektirovanie" style="display:flex;justify-content:center;padding-left:10px;">
+      <div class="razmeshenie" style="width:15%;">
+        <b style='display: block;text-align: center; margin-bottom:5px;'>Договор на размещение</b>
+        <div class="Razm_data_nomer" style="">
+
+        <div class="form-group" style="margin-right:5px">
+          <label for="Data_razm">Дата</label>
+          <input type="date" class="form-control" id="Data_razm" name="Data_razm">
+        </div>
+
+        <div class="form-group" style="">
+          <label for="Nomer_razm">Номер</label>
+          <input type="text" class="form-control" id="Nomer_razm" name="Nomer_razm">
+        </div>
+
+        </div>
+      </div>
+
+      <div class="Nomer_proekta" style="width:15%;margin-left:30px;margin-right:30px;">
+          <center><label for="Nomer_proekt"><b>Номер проекта</b></label></center>
+          <input type="text" class="form-control" id="Nomer_proekt" name="Nomer_proekt" style="margin-top:28px;">
+        </div>
+
+      <div class="proektirovanie" style="width:15%;padding-left:5px;">
+        <b style='display: block;text-align: center;'>Проектирование</b>
+        <div class="Proekt_nomer_data" style="margin-top:5px">
+        <div class="form-group" style="">
+          <label for="Nomer_zadaniya">Номер задания</label>
+          <input type="text" class="form-control" id="Nomer_zadaniya" name="Nomer_zadaniya">
+        </div>
+        <div class="form-group" style="">
+          <label for="Date_proekt">Дата</label>
+          <input type="date" class="form-control" id="Date_proekt" name="Date_proekt">
+        </div>
+        </div>
+      </div>
+
+      <div class="GIP_raion_kod_zayavitel" style="width:50%;margin-left:20px">
+          <center>
+            <label for="select_GIP"><b>ГИП</b></label>
+          </center>
+          <center>
+          <div class="GIP" style="margin:10px 0 0px 15px;width:60%">
+              <div class="border" style="border-color: #007BFF;">
+              <center>
+              <select id="select_GIP" name="select_GIP" class="form-control" onchange="change_GIP(this);" style="text-align:center;">
+                <option>Выберите ГИПа</option>
+              {% for gip_fio in context.gips_list %}
+              {% if gip_fio %}
+               <option value="{{gip_fio}}">{{gip_fio}}</option>
+              {% endif %}
+              {% endfor %}
+              </select>
+              </div>
+              <input type="text" class="form-control" id="custom_GIP" name="custom_GIP" style="margin-top:10px" placeholder="Ввести ГИПа вручную...">
+              </div>
+            </center>
+              <div class="form-group" style="margin:15px 0 0 20px">
+                <label for="organization">Организация</label>
+                <input type="text" class="form-control" id="organization" name="organization" style="text-align: center;font-size:13;">
+              </div>
+              </div>
+
+
+    </div>
+          <hr>
+          <h5 style='text-align:center; margin-bottom:5px;'>Подписанты</h5>
+          <div class="" style="margin-left:10px;margin-top:25px">
+          <h6 style='text-align:center; margin-bottom:5px;'>КС 2 и КС 3</h6>
+          <div class="" style="display:flex;margin-top:30px;margin-right:5px;">
+          <h6 style="margin-top:5px;width:120px;">Заказчик:</h6>
+          <label for="ks2_zakazchik_post" style="margin-top:5px;margin-right:5px;">Должность</label>
+          <input type="text" class="form-control" id="ks2_zakazchik_post" name="ks2_zakazchik_post" style="width:75%;font-size:13;" >
+          <label for="ks2_zakazchik_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+          <input type="text" class="form-control" id="ks2_zakazchik_fio" name="ks2_zakazchik_fio" style="width:20%;">
+          </div>
+
+          <div class="" style="display:flex;margin-top:30px;margin-right:5px;">
+          <h6 style="margin-top:5px;width:120px;">Подрядчик:</h6>
+          <label for="ks2_podryadchik_post" style="margin-top:5px;margin-right:5px;">Должность</label>
+          <input type="text" class="form-control" id="ks2_podryadchik_post" name="ks2_podryadchik_post" style="width:75%;font-size:13;">
+          <label for="ks2_podryadchik_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+          <input type="text" class="form-control" id="ks2_podryadchik_fio" name="ks2_podryadchik_fio" style="width:20%;">
+          </div>
+
+          <div class="" style="display:flex;margin-top:30px;margin-right:5px;">
+          <label for="ks2_podryadchik_post" style="margin-left:20px;margin-top:5px;margin-right:5px;"><b>Объект</b></label>
+          <input type="text" class="form-control" id="ks2_podryadchik_post" name="object" style="width:40%">
+          <label for="ks2_podryadchik_fio" style="margin-left:50px;margin-top:5px;margin-right:5px;"><b>Стройка</b></label>
+          <input type="text" class="form-control" id="ks2_podryadchik_fio" name="stroika" style="width:40%;">
+          </div>
+          </div>
+
+          <div class="" style="margin-left:10px;margin-top:35px">
+          <h6 style='text-align:center; margin-bottom:5px;'>КС 11 и КС 14</h6>
+          <div class="" style="display:flex;margin-top:30px;">
+          <h6 style="width:170px;">Председатель комиссии:</h6>
+          <label for="ks11_predsedatel_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+          <input type="text" class="form-control" id="ks11_predsedatel_post" name="ks11_predsedatel_post" style="width:75%;font-size:13;">
+          <label for="ks11_predsedatel_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+          <input type="text" class="form-control" id="ks11_predsedatel_fio" name="ks11_predsedatel_fio" style="width:20%;">
+          </div>
+
+          <div class="" style="display:flex;margin-top:30px;">
+          <h6 style="width:170px;">Представитель проектной организации:</h6>
+          <label for="ks11_predstav_proekt_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+          <input type="text" class="form-control" id="ks11_predstav_proekt_post" name="ks11_predstav_proekt_post" style="width:75%;font-size:13;">
+          <label for="ks11_predstav_proekt_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+          <input type="text" class="form-control" id="ks11_predstav_proekt_fio" name="ks11_predstav_proekt_fio" style="width:20%;">
+          </div>
+
+          <div class="" style="display:flex;margin-top:30px;">
+          <h6 style="width:170px;">Представитель эксплуатирующей организации:</h6>
+          <label for="ks11_predstav_ekspl_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+          <input type="text" class="form-control" id="ks11_predstav_ekspl_post" name="ks11_predstav_ekspl_post" style="width:75%;font-size:13;">
+          <label for="ks11_predstav_ekspl_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+          <input type="text" class="form-control" id="ks11_predstav_ekspl_fio" name="ks11_predstav_ekspl_fio" style="width:20%;">
+          </div>
+
+          <div class="" style="display:flex;margin-top:10px;">
+          <h6 style="width:170px;">Представитель генерального подрядчика:</h6>
+          <label for="ks11_predstav_podryadchika_post" style="margin-left:20px;margin-top:5px;margin-right:5px;">Должность</label>
+          <input type="text" class="form-control" id="ks11_predstav_podryadchika_post" name="ks11_predstav_podryadchika_post" style="width:75%;font-size:13;">
+          <label for="ks11_predstav_podryadchika_fio" style="margin-left:20px;margin-top:5px;margin-right:5px;">ФИО</label>
+          <input type="text" class="form-control" id="ks11_predstav_podryadchika_fio" name="ks11_predstav_podryadchika_fio" style="width:20%;">
+          </div>
+          </div>
+          <hr style='margin-top:10px;'>
+          <div class="Prover_davl_davl_truba_soedinenie" style="display:block;justify-content:center;">
+            <div class="" style="display:flex;justify-content:space-around;">
+              <b><span ">Проверочное давление</span></b>
+              <center><span style="margin-right:20%;"><b>Давление</b></span></center>
+            </div>
+            <div class="Proverochnoe_davlenie" style="display:flex;margin-top:20px;justify-content:space-around;width:84%;">
+              <div class="border" style="border-color: #007BFF;min-width:250px;height:40px">
+                  <select id="select_davlenie" name="select_davlenie" class="form-control" onchange="change_davlenie(this);">
+                    <option>Выберите давление, МПа</option>
+                   <option>0.3</option>
+                   <option>0.6</option>
+                  </select>
+                </div>
+                  <input type="text" class="form-control" id="select_davlenie_custom" name="select_davlenie_custom" placeholder="Ввести проверочное давление (МПа)..." style="margin-left:10px;width:300px">
+                  <input type="text" class="form-control" id="davlenie_name" name="davlenie_name" placeholder="Ввести название газопроводов (род.падеж)" style="margin-left:10px;width:370px">
+              <div class="davlenie" style="margin-left:120px;">
+                  <input type="text" class="form-control" id="davl" name="davl">
+                </div>
+              </div>
+                </div>
+                <hr>
+
+                <center><b><span id="gazoprov">Подземный стальной газопровод</span></b></center>
+                      <div class="podzem_stal_trubi" id="podzem_stal_trubi" style="margin-top:20px">
+                      <div class="podzem_stal_truba_with_plus" style="display:flex;justify-content:center;">
+                      <div class="podzem_stal_truba" id="podzem_stal_truba" style="display:flex;justify-content:space-around;margin:10px 0 0 0">
+                      <span style= "margin-top:5px;min-width:50px;max-width:50px;">Труба </span>
+                      <span style="min-width:5px;max-width:5px; margin:5px;">⌀</span>
+                      <input type="text" class="form-control" id="truba" name="stalnoi_truba_diametr" style="width:100px;margin-left:10px;">
+                      <span style="min-width:5px;max-width:5px; margin:5px 5px 5px 10px;">x</span>
+                      <input type="text" class="form-control" id="truba" name="stalnoi_truba_kolvo" style="width:80px;margin-left:10px;">
+                      <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">Длина, м</span>
+                      <input type="text" class="form-control" id="stalnoi_truba_dlina" name="stalnoi_truba_dlina" style="width:200px;margin-left:5px;" onchange="change_input_stalnoi()">
+                      <span style="width:100px;margin:5px 0 0 15px;">Примечание:</span>
+                      <input type="text" class="form-control" id="prim_truba" name="stalnoi_truba_prim" style="width:260px;" value="в изоляции «усиленного» типа">
+                      </div>
+                      <input type="button" value="+" onclick="createNewStalTruba();" style="width:30px;height:30px;margin:13px 0 0 20px;">
+                      </div>
+                    </div>
+                    <b><span style="margin:100px 0 0 60px;" id="">Итого:</span></b>
+                    <b><span style="margin:100px 0px 0px 20px;" id="itogo_stalnoi_gaz" ></b>
+                    <b><span style="margin:100px 0 0 20px;" id="meters">м</span></b>
+                    <div class="ustanovl" style="display:block;">
+                    <center><span style="text-align:center"><b>Установлено:</b></span></center>
+                    <div class="elements" style="display:block;width:100%">
+                      <div class="truba_" style="display:flex;margin-top:5px;justify-content:center;">
+                        <ul>
+                          <li>
+                          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                          <span style="width:140px;">Неразъёмное соединение:</span>
+                          <span style="width:30px;margin: 5px 0px 0px 10px;">ПЭ ⌀</span>
+                          <input type="text" class="form-control" id="neraz_soed_diam" name="stalnoi_neraz_soed_PE" style="width:70px;">
+                          <span style="width:30px;margin: 5px 0px 0px 10px;">/СТ ⌀</span>
+                          <input type="text" class="form-control" id="neraz_soed_diam" name="stalnoi_neraz_soed_ST" style="width:70px;">
+                          <input type="text" class="form-control" id="neraz_soed_kolvo" name="neraz_soed_kolvo" style="width:100px;margin-left:20px;">
+                          <span style="width:30px; margin-left:20px;margin-top:5px;">шт</span>
+                          </div>
+                          </li>
+                          <li>
+                          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                          <span style="margin-top:5px">Контрольная трубка:</span>
+                          <input type="text" class="form-control" id="kontrolnaya_trunka" name="stalnoi_kontrolnaya_trubka" style="width:100px;margin-left:20px;">
+                          <span style="width:150px; margin-left:20px;margin-top:5px"> шт</span>
+                          </div>
+                          </li>
+                          <li>
+                          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                          <span style="margin-top:5px">Отвод ст. 90 гр.:</span>
+                          <input type="text" class="form-control" id="kontrolnaya_trunka" name="stalnoi_otvod" style="width:100px;margin-left:20px;">
+                          <span style="width:150px; margin-left:20px;margin-top:5px"> шт</span>
+                          </div>
+                          <li>
+                          <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                          <span style="margin-top:5px">Опознавательный знак:</span>
+                          <input type="text" class="form-control" id="stal_opoznavat_znak" name="stal_opoznavat_znak" style="width:100px;margin-left:20px;">
+                          <span style="width:150px; margin-left:20px;margin-top:5px"> шт</span>
+                          </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    </div>
+                  <hr>
+                <!-- </form>
+                <form action="" name="podzem_polietilen_gazoprovod" method="post">
+                  {% csrf_token %} -->
+
+                  <div class="polietilen_gazoprovod" style="margin:1%;">
+                      <center><b><span id="poliet_gazoprov">Подземный полиэтиленовый газопровод</span></b></center>
+                      <div class="polietilen_gazoprovod" style="margin:1%;display:block;justify-content:center;">
+                      <div class="poliet_trubi" id="poliet_trubi" style="display:block;justify-content:center;">
+                      <div class="poliet_truba_with_plus" id="poliet_truba_with_plus" style="display:flex;justify-content:center;">
+                      <div class="poliet_truba" id="poliet_truba" style="display:flex;justify-content:center;margin-top:20px;">
+                        <span style= "margin-top:5px;min-width:170px;max-width:170px">Труба ПЭ100 SDR11</span>
+                        <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                        <input type="text" class="form-control" id="truba" name="poliet_truba_diametr" style="width:60px;">
+                        <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+                        <input type="text" class="form-control" id="truba" name="poliet_truba_kolvo" style="width:60px;">
+                        <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">Длина, м</span>
+                        <input type="text" class="form-control" id="dlina_truba" name="poliet_truba_dlina" style="width:100px;" onchange="change_input_podzem()">
+
+                        <span style= "min-width:320px;max-width:320px; margin-left:70px;margin-top:5px;">Муфта электросварная ПЭ100 SDR11</span>
+                        <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                        <input type="text" class="form-control" id="truba" name="poliet_mufta_diametr" style="width:60px;">
+                        <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+                        <input type="text" class="form-control" id="truba" name="poliet_mufta_kolvo" style="width:60px;">
+                        <input type="text" class="form-control" id="dlina_mufta" name="poliet_mufta_dlina" style="width:100px;margin-left:15px;">
+                        <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">шт</span>
+                      </div>
+                      <input type="button" value="+" onclick="createNewTruba();" style="width:30px;height:30px;margin:22px 0 0 20px;">
+                      </div>
+                      </div>
+                      <div class="" style="margin-top:30px;">
+                        <b><span style="width:150px;margin-top:50px;margin-left:15px;" id="itogo_">Итого:</span></b>
+                        <b><span style="width:150px;margin-top:50px;margin-left:15px;" id="itogo_podzem_gaz" ></b>
+                        <b><span style="width:150px;margin-top:50px;margin-left:5px;" id="meters">м</span></b>
+                      </div>
+                      <div class="ustanovl" style="display:block;justify-content:center;margin-left:80px;margin-top:30px;">
+                        <center><span style="text-align:center"><b>Установлено:</b></span></center>
+                        <div class="elements" style="display:block;justify-content:center;">
+                          <div class="truba_" style="display:flex;justify-content:center;margin-top:5px;">
+                            <ul>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:150px;margin-top:4px;">Отвод ПЭ100 SDR11</span>
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="poliet_otvod_diametr" style="width:100px;">
+                                <input type="text" class="form-control" id="dlina_truba_" name="poliet_otvod_dlina" style="margin-left:20px;width:100px;">
+                                <span style="width:100px;margin-left:10px; margin-top:5px;">шт</span>
+                              </div>
+                              </li>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:300px;margin-top:4px;">Тройник электросварный ПЭ100 SDR11</span>
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="poliet_troinik1" style="width:100px;">
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="poliet_troinik2" style="width:100px;">
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="poliet_troinik3" style="width:100px;">
+                                <input type="text" class="form-control" id="dlina_truba_" name="poliet_troinik_dlina" style="width:100px;margin-left:20px;">
+                                <span style="width:140px;margin-left:10px; margin-top:5px;">шт</span>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:300px;margin-top:4px;">Заглушка электросварная ПЭ100 SDR11</span>
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="poliet_zaglushka_diametr" style="width:100px;">
+                                <input type="text" class="form-control" id="dlina_truba_" name="poliet_zaglushka_dlina" style="margin-left:20px;width:100px;">
+                                <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:300px;margin-top:4px;">Лента сигнальная "Осторожно! ГАЗ!"</span>
+                                <input type="text" class="form-control" id="dlina_truba_" name="poliet_lenta_signal_dlina" style="margin-left:20px;width:100px;">
+                                <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:400px;margin-top:4px;">Кран шаровой для подземной установки ПЭ 100 ГАЗ SDR11</span>
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="poliet_kran_shar_diametr" style="width:100px;">
+                                <input type="text" class="form-control" id="dlina_truba_" name="poliet_kran_shar_dlina" style="margin-left:20px;width:100px;">
+                                <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:200px;margin-top:4px;">Опознавательный знак</span>
+                                <input type="text" class="form-control" id="dlina_truba_" name="poliet_opoznavat_znak_kolvo" style="width:100px;margin-left:20px">
+                                <span style="width:80px;margin-left:10px; margin-top:5px;"> шт</span>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                                <span style= "width:200px;margin-top:4px;">Седелка электросварная</span>
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik1" style="width:100px;">
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik2" style="width:100px;">
+                                <span style="width:30px;margin-left:5%;margin-top:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" name="sedelka_poliet_troinik3" style="width:100px;">
+                                <input type="text" class="form-control" id="sedelka_poliet_kolvo" name="sedelka_poliet_kolvo" style="width:100px;margin-left:50px">
+                                <span style="width:120px;margin-left:10px; margin-top:5px;">шт</span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                <!-- </form>
+
+                <form action="" name="nadzem_gazoprovod" method="post">
+                  {% csrf_token %} -->
+                    <center><b><span id="nadzem_gazoprov">Надземный стальной газопровод</span></b></center>
+                    <div class="nadzemn_gazoprovod" style="display:flex;justify-content:center;">
+                    <div class="nadzemn_gazoprovod" style="display:block;justify-content:center;">
+                        <div class="nadzem_stal_trubi" id="nadzem_stal_trubi" style="display:block;justify-content:center;margin-top:20px;">
+                        <div class="nadzem_stal_truba_with_plus" style="display:flex;justify-content:center;">
+                        <div class="nadzem_stal_truba" id="nadzem_stal_truba" style="display:flex;justify-content:center;margin-top:20px; margin-bottom:5px;">
+                        <span style="margin:5px 0 0 0;;min-width:170px;max-width:170px;">Труба стальная</span>
+                        <span style="width:20px;margin-left:5px;margin-top:5px;">⌀</span>
+                        <input type="text" class="form-control" id="nadzem_stal_truba_diametr" name="nadzem_stal_truba_diametr" style="width:100px;">
+                        <span style="width:20px;margin-left:15px;margin-top:5px;">x</span>
+                        <input type="text" class="form-control" id="nadzem_stal_truba_x" name="nadzem_stal_truba_x" style="width:100px;">
+                        <span style="min-width:80px;max-width:80px;margin-left:15px; margin-top:5px;">Длина, м</span>
+                        <input type="text" class="form-control" id="nadzem_stal_truba_dlina" name="nadzem_stal_truba_dlina" style="width:100px;" onchange="change_input_nadzemnyi()">
+                        </div>
+                        <input type="button" value="+" onclick="createNewNadzemStalTruba();" style="width:30px;height:30px;margin:22px 0 0 20px;">
+                        </div>
+                        </div>
+                        <b><span id="itogo_nadzemnyi_gaz_1">Итого:</span></b>
+                        <b><span id="itogo_nadzemnyi_gaz"></span></b>
+                        <b><span id="itogo_nadzemnyi_gaz_2">м</span></b>
+                          <center><b>Установлено:</b></center>
+                        <div class="123" style="display:block;justify-content:center;">
+                        <ul>
+                        <li>
+                        <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                        <span>Изолирующие соединения</span>
+                        <span style="margin-left:10%;margin-top:5px;margin-right:5px;">⌀</span>
+                        <input type="text" class="form-control" id="nadzem_stalnoi_izolir_soed" name='nadzem_stal_izolir_soed' style="width:100px;">
+                        <input type="text" class="form-control" id="nadzem_stalnoi_izolir_kolvo" name='nadzem_stal_izolir_kolvo' style="width:100px;margin-left:60px;">
+                        <span style="margin-left:2%; margin-top:5px;margin-right:5px;">шт</span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                        <span>Кран стальной</span>
+                        <span style="margin-left:10%;margin-top:5px;margin-right:5px;">⌀</span>
+                        <input type="text" class="form-control" id="nadzem_stalnoi_kran_diametr" name='nadzem_stal_kran_diametr' style="width:100px;">
+                        <input type="text" class="form-control" id="nadzem_stalnoi_kran_kolvo" name="nadzem_stal_kran_kolvo" style="margin-left:5%;width:100px;">
+                        <span style="margin-left:2%; margin-top:5px;margin-right:5px;">шт</span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                        <span>Отвод</span>
+                        <span style="margin-left:10%;margin-top:5px;margin-right:5px;">⌀</span>
+                        <input type="text" class="form-control" id="nadzem_stalnoi_otvod_diametr" name='nadzem_stal_otvod_diametr' style="width:100px;">
+                        <input type="text" class="form-control" id="nadzem_stalnoi_otvod_kolvo" name='nadzem_stal_otvod_kolvo' style="margin-left:5%;width:100px;">
+                        <span style="margin-left:2%; margin-top:5px;">шт</span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                        <span>Цокольный ввод</span>
+                        <span style="margin-left:10%;margin-top:5px;margin-right:5px;min-width:40px;">ПЭ ⌀</span>
+                        <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_PE" name="nadzem_stal_cokol_vvod_PE" style="width:100px;">
+                        <span style="margin-left:1%;margin-top:5px;margin-right:5px;min-width:50px;">/СТ ⌀</span>
+                        <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_ST" name="nadzem_stal_cokol_vvod_ST" style="width:100px;">
+                        <input type="text" class="form-control" id="nadzem_stalnoi_cokol_vvod_kolvo" name='nadzem_stal_cokol_vvod_kolvo' style="margin-left:5%;width:100px;">
+                        <span style="margin-left:2%; margin-top:5px;">шт</span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                          <span>Крепление газопровода к кирпичной стене</span>
+                          <input type="text" class="form-control" id="nadzem_stalnoi_kreplenie" name="nadzem_stal_kreplenie" style="margin-left:10%;width:100px;">
+                          <span style="margin-left:2%; margin-top:5px;">шт</span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="neraz_soed" style="display:flex;margin-top:20px;">
+                          <span style="width:350px">Стойка под газопровод</span>
+                          <span style="width:30px;margin-left:10%; margin-top:5px;">⌀</span>
+                          <input type="text" class="form-control" id="nadzem_stalnoi_stoika_diametr" name="nadzem_stalnoi_stoika_diametr" style="width:100px;">
+                          <span style="width:150px;margin-left:5%; margin-top:5px;">Длина, м</span>
+                          <input type="text" class="form-control" id="nadzem_stalnoi_stoika_dlina" name="nadzem_stalnoi_stoika_dlina" style="width:100px;">
+                          <input type="text" class="form-control" id="stoika" name="stoika" style="margin-left:10%;width:100px;">
+                          <span style="margin-left:2%; margin-top:5px;">шт</span>
+                        </div>
+                      </li>
+                      </ul>
+                      </div>
+                    </div>
+                    </div>
+                <!-- </form> -->
+
+                      <hr>
+                      <!-- <form action="" name="all" method="post">
+                        {% csrf_token %} -->
+
+                      <div class="Sert_Gazopr" style="display:flex;">
+
+                      <div class="GIP" style="width:15%;">
+                          <center><label><b>Сертификаты</b></label></center>
+                          <center>
+                            <div class="border" style="border-color: #007BFF;">
+                            <select id="select_cert" name="select_cert" class="form-control" multiple="multiple">
+                            {% for certificate in context.certificates %}
+                            {% if certificate.name %}
+                             <option value="{{certificate.name}}">{{certificate.name}}</option>
+                            {% endif %}
+                            {% endfor %}
+                            </select>
+                            </div>
+                          </center>
+                        </div>
+                        <div class="">
+                        <div class="" style='display:flex;margin-bottom:10px'>
+                          <div class="gazoprovod">
+                            <center>
+                            <label for="gazoprovod_input"><b>Газопровод (ЭХЗ)</b></label>
+                              <input type="checkbox" id="gazoprovod_input" name="gazoprovod_input" class="form-control">
+                              </center>
+                            </div>
+                              <div class="prodavlivanie">
+                                <center>
+                                <label for="prodavlivanie_input"><b>&nbspПродавливание</b></label>
+                                  <input type="checkbox" id="prodavlivanie_input" name="prodavlivanie_input" class="form-control" onclick="prodavlivanie(this);">
+                                  </center>
+                                </div>
+                        </div>
+                        <div class="rostehnadzor">
+                          <center>
+                          <label for="rostehnadzor_input"><b>Ростехнадзор</b></label>
+                            <input type="checkbox" id="rostehnadzor_input" name="rostehnadzor_input" class="form-control" onclick="rostehnadzor(this);">
+                            </center>
+                          </div>
+                        </div>
+                              <div class="svarshiki" style="width:65%;text-align:center;">
+                                <b>Сварщики</b>
+                                  <div class="" style="border-left:1px solid rgba(0,0,0,.1);padding-left:20px;">
+                                    <div class="" style="display:flex;margin-top:20px;">
+                                        <label for="svarshik_polietilen" style="width:400px;">Сварщик (полиэтилен)</label>
+                                        <input type="text" id="svarshik_polietilen" name="svarshik_polietilens" class="form-control" style="margin-left:10px;width:50%">
+                                      <label for="diametr_poliet_styki" style="margin-left:15px;width:350px;">⌀ сваренных стыков</label>
+                                      <input type="text" id="diametr_poliet_styki" name="diametr_poliet_styki" class="form-control" style="width:100px;">
+                                      <label for="kolvo_poliet_styki" style="margin-left:15px;width:180px;">Кол-во</label>
+                                      <input type="text" id="kolvo_poliet_styki" name="kolvo_poliet_styki" class="form-control" style="width:70px;">
+                                      <label for="date_polietilens" style="margin-left:15px;width:250px;">Дата сварки</label>
+                                      <input type="date" id="date_polietilens" name="date_polietilens" class="form-control" style="width:50%">
+                                    </div>
+                                    <div class="" style="display:flex;margin-top:20px;">
+                                        <label for="svarshik_stal" style="width:400px;">Сварщик (cталь)</label>
+                                        <input type="text" id="svarshik_stal" name="svarshik_stal" class="form-control" style="margin-left:10px;width:50%">
+                                      <label for="diametr_stal_styki" style="margin-left:15px;width:350px;">⌀ сваренных стыков</label>
+                                      <input type="text" id="diametr_stal_styki" name="diametr_stal_styki" class="form-control" style="width:100px;">
+                                      <label for="kolvo_stal_styki" style="margin-left:15px;width:180px;">Кол-во</label>
+                                      <input type="text" id="kolvo_stal_styki" name="kolvo_stal_styki" class="form-control" style="width:70px;">
+                                      <label for="date_stal" style="margin-left:15px;width:250px;">Дата сварки</label>
+                                      <input type="date" id="date_stal" name="date_stal" class="form-control" style="width:50%">
+                                    </div>
+                                </div>
+                          </div>
+                          </div>
+
+                          <hr>
+
+                          <div class="" style="display:flex;justify-content:space-around;">
+                          <div class="" style="width:20%;margin-top:10px;text-align:center;">
+                            <span><b>Технадзор</b></span>
+                            <select id="select_tehnadzor" name="select_tehnadzor" class="form-control" style="margin-top:10px;" onclick="select_teh(this);">
+                              <option>Выберите технадзор</option>
+                            </select>
+                            <input type="text" class="form-control" name="select_tehnadzor_custom" id="select_tehnadzor_custom" value="" placeholder="Ввести технадзор..." style="margin-top:10px">
+                            </div>
+                            <div class="form-group" style="margin:12px;width:20%;text-align:center;">
+                              <b><label for="Date_1_zamer">Дата 1 замера (только будни)</label></b>
+                              <input type="date" class="form-control" id="Date_1_zamer" name="Date_1_zamer">
+                            </div>
+                            <div class="form-group" style="margin:12px;width:20%;text-align:center;">
+                              <b><label for="Date_2_zamer">Дата 2 замера (только будни)</label></b>
+                              <input type="date" class="form-control" id="Date_2_zamer" name="Date_2_zamer">
+                            </div>
+                            <div class="form-group" style="margin:12px;width:20%;text-align:center;">
+                              <b><label for="Date_sostavl_project">Дата составления проекта</label></b>
+                              <input type="date" class="form-control" id="Date_sostavl_project" name="Date_sostavl_project">
+                            </div>
+                          </div>
+                          <div class="" style="display:flex;justify-content:space-around;">
+                          <div class="" style=" width:20%;margin-top:10px;text-align:center;">
+                            <b><label for="organization_project">Проектная организация</label></b>
+                            <input type="text" class="form-control" id="organization_project" name="proektnaya_org">
+                          </div>
+                          <div class="form-group" style="margin:12px;width:20%;text-align:center;">
+                              <b><label for="Date_1_zamer">Дата разбивки</label></b>
+                              <input type="date" class="form-control" id="Date_1_zamer" name="date_razbiv">
+                            </div>
+                            <div class="form-group" style="margin:12px;width:20%;text-align:center;">
+                              <b><label for="Date_2_zamer">Дата продувки</label></b>
+                              <input type="date" class="form-control" id="Date_2_zamer" name="date_produv">
+                            </div>
+                            <div class="form-group" style="margin:12px;width:20%;text-align:center;">
+                              <b><label for="Date_sostavl_obj">Дата укладки</label></b>
+                              <input type="date" class="form-control" id="Date_sostavl_obj" name="date_ukl">
+                          </div>
+                        </div>
+                        <!-- </form> -->
+                          <hr>
+                          <!-- <form class="" action="" name="fytlyari" method="post">
+                            {% csrf_token %} -->
+                          <div class="razmeshenie_i_proektirovanie" style="display:flex;justify-content:space-around;">
+                            <div class="razmeshenie" style="width:33%; border-right:1px solid rgba(0,0,0,.1);">
+                              <b style='display: block;text-align: center; margin-bottom:5px;'>Защитный футляр</b>
+                              <div class="Razm_data_nomer" style="display:flex;justify-content:center;">
+                              <div class="form-group" style="margin:20px;width:27%;">
+                                <label for="zashit_futlyar_diametr">Диаметр, м</label>
+                                <input type="text" class="form-control" id="zashit_futlyar_diametr" name="zashit_futlyar_diametr">
+                              </div>
+                              <div class="form-group" style="margin:55px 20px 20px 5px;width:5%;">
+                                <span>x</span>
+                              </div>
+                              <div class="form-group" style="margin:52px 20px 0 0;width:15%;">
+                                <input type="text" class="form-control" id="zashit_futlyar_x" name="zashit_futlyar_x">
+                              </div>
+                              <div class="form-group" style="margin:20px;width:27%;">
+                                <label for="zashit_futlyar_dlina">Длина, м</label>
+                                <input type="text" class="form-control" id="zashit_futlyar_dlina" name="zashit_futlyar_dlina">
+                              </div>
+                              </div>
+                            </div>
+
+                            <div class="razmeshenie" style="width:40%; border-right:1px solid rgba(0,0,0,.1);">
+                              <b style='display: block;text-align: center; margin-bottom:5px;'>Футляр на выходе земли</b>
+                              <div class="Razm_data_nomer" style="display:flex;justify-content:center;">
+                              <div class="form-group" style="margin:20px;width:25%;">
+                                <label for="Data_razm">Диаметр, м</label>
+                                <input type="text" class="form-control" id="Data_razm" name="futlyar_na_vyhode_diametr">
+                              </div>
+                              <div class="form-group" style="margin:55px 10px 20px 5px;width:5%;">
+                                <span>x</span>
+                              </div>
+                              <div class="form-group" style="margin:52px 10px 0 0;width:15%;">
+                                <input type="text" class="form-control" id="futlyar_na_vyhode_x" name="futlyar_na_vyhode_x">
+                              </div>
+                              <div class="form-group" style="margin:20px;width:20%;">
+                                <label for="Nomer_razm">Длина, м</label>
+                                <input type="text" class="form-control" id="Nomer_razm" name="futlyar_na_vyhode_dlina">
+                              </div>
+                              <div class="form-group" style="margin:20px;width:30%;">
+                                <label for="Nomer_razm">Количество, шт</label>
+                                <input type="text" class="form-control" id="Nomer_razm" name="futlyar_na_vyhode_kolvo">
+                              </div>
+                              </div>
+                            </div>
+
+                            <div class="razmeshenie" style="width:40%; border-right:1px solid rgba(0,0,0,.1);">
+                              <b style='display: block;text-align: center; margin-bottom:5px;'>Опора под газопровод</b>
+                              <div class="Razm_data_nomer" style="display:flex;justify-content:center;">
+                              <div class="form-group" style="margin:20px 10px 20px 10px;width:20%;">
+                                <label for="Data_razm">Диаметр, м</label>
+                                <input type="text" class="form-control" id="Data_razm" name="opora_pod_gazoprovod_diametr">
+                              </div>
+                              <div class="form-group" style="margin:55px 5px 20px 5px;width:5%;">
+                                <span>x</span>
+                              </div>
+                              <div class="form-group" style="margin:52px 10px 0 0;width:15%;">
+                                <input type="text" class="form-control" id="opora_pod_gazoprovod_x" name="opora_pod_gazoprovod_x">
+                              </div>
+                              <div class="form-group" style="margin:20px 10px 20px 10px;width:20%;">
+                                <label for="Nomer_razm">Длина, м</label>
+                                <input type="text" class="form-control" id="Nomer_razm" name="opora_pod_gazoprovod_dlina">
+                              </div>
+                              <div class="form-group" style="margin:20px;width:30%;">
+                                <label for="Nomer_razm">Количество, шт</label>
+                                <input type="text" class="form-control" id="Nomer_razm" name="opora_pod_gazoprovod_kolvo">
+                              </div>
+                              </div>
+                            </div>
+                            </div>
+                            <hr>
+                            <div class="razmeshenie">
+                              <center><b><span id="act_shar">Дополнительные данные для акта об установке шарового крана на подземном газопроводе</span></b></center>
+                              <div class="sharovyi_kran" style="margin:1%;display:block;justify-content:center;">
+                              <div class="shar_kran_pairs" id="shar_kran_pairs" style="display:block;justify-content:center;">
+                              <div class="poliet_truba_with_plus" id="poliet_truba_with_plus" style="display:flex;justify-content:center;">
+                              <div class="shar_kran_pair" id="shar_kran_pair" style="display:flex;justify-content:center;margin-top:20px;">
+                                <span style= "margin-top:5px;min-width:170px;max-width:170px">ПЭ100 SDR11 кран </span>
+                                <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_sharovyi_kran">
+                                <span style= "min-width:240px;max-width:240px; margin-left:70px;margin-top:5px;">Муфта ПЭ 100 ГАЗ SDR11</span>
+                                <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                                <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_sharovyi_kran_mufta">
+                              </div>
+                              <input type="button" value="+" onclick="createNewShar_kran();" style="width:30px;height:30px;margin:22px 0 0 20px;">
+                              </div>
+                              </div>
+                                </div>
+                                </div>
+
+                              <hr>
+                              <div class="polietilen_gazoprovod" style="margin:1%;">
+                                <center><b><span id="poliet_gazoprov">Дополнительные данные для акта о прокладке газопровода в защитном футляре</span></b></center>
+                                <div class="polietilen_gazoprovod" style="margin:1%;display:block;justify-content:center;">
+                                  <div class="zashitnye_futlyari" id="zashitnye_futlyari" style="display:block;justify-content:center;">
+                                    <div class="poliet_truba_with_plus" id="poliet_truba_with_plus" style="display:flex;justify-content:center;">
+                                      <div class="zashitnyi_futlyar" id="zashitnyi_futlyar" style="display:flex;justify-content:center;margin-top:20px;">
+                                        <span style= "margin-top:5px;min-width:250px;max-width:250px">Труба ПЭ100 ГАЗ SDR11</span>
+                                        <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                                        <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_gazopr_v_zashit_diametr">
+                                        <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+                                        <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_gazopr_v_zashit_kolvo">
+
+                                        <span style= "margin-left:70px;margin-top:5px;">Труба ст.</span>
+                                        <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                                        <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_gazopr_v_zashit_truba_diametr">
+                                        <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+                                        <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_gazopr_v_zashit_truba_kolvo">
+                                      </div>
+                                      <input type="button" value="+" onclick="createNewTrubaZashitFutlyar();" style="width:30px;height:30px;margin:22px 0 0 20px;">
+                                    </div>
+                                  </div>
+
+                                <hr>
+
+                                <div class="razmeshenie">
+                                  <center><b><span id="act_shar">Дополнительные данные для акта об установке футляров на выходе из земли</span></b></center>
+                                  <div class="truba_futlyar" style="margin:1%;display:block;justify-content:center;">
+                                  <div class="trubi_fut" id="trubi_fut" style="display:block;justify-content:center;">
+                                  <div class="poliet_truba_with_plus" id="poliet_truba_with_plus" style="display:flex;justify-content:center;">
+                                  <div class="truba_fut" id="truba_fut" style="display:flex;justify-content:center;margin-top:20px;">
+                                    <span style= "margin-top:5px;">Труба </span>
+                                    <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                                    <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_ob_ustanovke_futlyarov_truba_diametr">
+                                    <span style="min-width:20px;max-width:20px; margin-left:15px;margin-top:5px;">x</span>
+                                    <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_ob_ustanovke_futlyarov_truba_kolvo">
+                                  </div>
+                                  <input type="button" value="+" onclick="createNewtrubaFut();" style="width:30px;height:30px;margin:22px 0 0 20px;">
+                                  </div>
+                                  </div>
+                                    </div>
+                                    </div>
+
+                                  <hr>
+
+                                  <div class="polietilen_gazoprovod" style="margin:1%;">
+                                    <center><b><span id="poliet_gazoprov">Дополнительные данные для акта об установке опор под газопровод</span></b></center>
+                                    <div class="polietilen_gazoprovod" style="margin:1%;display:block;justify-content:center;">
+                                      <div class="opory" id="opory" style="display:block;justify-content:center;">
+                                        <div class="poliet_truba_with_plus" id="poliet_truba_with_plus" style="display:flex;justify-content:center;">
+                                          <div class="opora" id="opora" style="display:flex;justify-content:center;margin-top:20px;">
+                                            <span style= "margin-top:5px;">Труба ст.</span>
+                                            <span style="min-width:20px;max-width:20px; margin:5px;">⌀</span>
+                                            <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_diametr">
+                                            <span style="min-width:20px;max-width:20px; margin:5px 5px 5px 12px;">x</span>
+                                            <input type="text" class="form-control" id="truba" style="width:60px;" name="dop_dann_ob_ustanovke_opor_pod_gaz_truba_kolvo">
+                                          </div>
+                                          <input type="button" value="+" onclick="createNewTrubaOpora();" style="width:30px;height:30px;margin:22px 0 0 20px;">
+                                        </div>
+                                      </div>
+
+                                      <div class="" id="prodavlivanie_div" style="margin-top:20px;">
+                                      </div>
+
+                                      <div class="" id="rostehnadzor_div" style="">
+                                      </div>
+
+                                      <div class="btn-container" style="margin-top:50px;"><button type="submit" class="btn btn-primary" style="width:100%">ДОБАВИТЬ ОБЪЕКТ</button></div>
+                                    </form>
+
+                                    <hr>
+      {% endblock %}
